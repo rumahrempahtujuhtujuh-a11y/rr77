@@ -4,8 +4,8 @@
   "description": "Laporan titipan, analisa, dan stok bahan baku",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0b",
-  "theme_color": "#0a0a0b",
+  "background_color": "#0B7A55",
+  "theme_color": "#0B7A55",
   "icons": [
     {
       "src": "/icon.svg",

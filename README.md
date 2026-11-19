@@ -37,7 +37,6 @@ Satu file tampilan (`index.html`) dan satu fungsi server (`api/data.js`), tanpa 
 - Titipan dicatat tiap hari. Setelah sekitar 7 sampai 8 hari, tagih ke outlet lalu tekan **Tutup tagihan** (menu Bayar, per outlet).
 - Titipan dan pembayaran periode itu ditandai tertutup, sehingga **tagihan kembali 0** dan dihitung lagi dari awal. Data lama tidak dihapus: tetap dipakai untuk analisa dan tersimpan di *Tagihan yang sudah ditutup* (ada tombol Salin untuk laporannya).
 - Sisa yang belum dibayar saat tutup tidak dibawa ke periode baru, hanya tercatat di riwayat.
-- Beranda menampilkan pengingat bila titipan sebuah outlet sudah 7 hari atau lebih.
 
 ## Menu Beranda dan Analisa
 Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan ini / 7 hari / Semua) di bawahnya.
@@ -46,6 +45,11 @@ Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan
 - Kartu utama Beranda adalah **Tagihan berjalan**: sisa dari titipan yang belum lunas (periode yang belum ditutup).
 - **Laporan** berisi rekap per pembayaran (klaster). Tiap pembayaran yang masuk menjadi satu rekap berisi titipan yang dilunasinya (paling lama lebih dulu), dengan tombol *Salin rekap* untuk WhatsApp dan *Salin semua rekap*. Titipan yang belum dibayar tidak masuk rekap. Tombol *Salin tagihan* di Beranda menyalin daftar tagihan lengkap seperti laporan lama.
 - Tombol pensil (ubah) tersedia di: titipan (Beranda dan Outlet), nama outlet, pembayaran (Bayar dan Laporan), bahan baku, serta riwayat belanja/pemakaian bahan. Titipan di periode yang sudah ditutup tidak bisa diubah; tekan *Buka lagi* di menu Bayar (Tagihan yang sudah ditutup) bila perlu memperbaikinya.
+
+## Tampilan
+- Desain berwarna penuh dengan tema daun (hijau) dan warna api (oranye) khas nasi bakar. Tiap menu punya warna sendiri: Beranda hijau, Outlet kuning, Bayar biru, Bahan ungu, Laporan merah muda, Lainnya abu-abu.
+- Beranda punya empat tombol cepat (Titipan, Bayar, Belanja, Salin tagihan). Tiap outlet punya avatar berwarna. Mengikuti mode gelap/terang HP.
+- Font Plus Jakarta Sans dari Google Fonts (font cadangan dipakai bila tidak ada internet). Ikon aplikasi di `icon.svg`, `icon-192.png`, `icon-512.png`.
 
 ## Catatan
 - Keamanan: semua data lewat `/api/data` dengan PIN. Setelah 10 kali salah PIN, alamat IP itu dikunci 10 menit.
