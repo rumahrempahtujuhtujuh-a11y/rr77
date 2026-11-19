@@ -42,6 +42,11 @@ Satu file tampilan (`index.html`) dan satu fungsi server (`api/data.js`), tanpa 
 ## Menu Beranda dan Analisa
 Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan ini / 7 hari / Semua) di bawahnya.
 
+## Beranda, Laporan, dan Ubah data
+- Kartu utama Beranda adalah **Tagihan berjalan**: sisa dari titipan yang belum lunas (periode yang belum ditutup).
+- **Laporan** berisi rekap per pembayaran (klaster). Tiap pembayaran yang masuk menjadi satu rekap berisi titipan yang dilunasinya (paling lama lebih dulu), dengan tombol *Salin rekap* untuk WhatsApp dan *Salin semua rekap*. Titipan yang belum dibayar tidak masuk rekap. Tombol *Salin tagihan* di Beranda menyalin daftar tagihan lengkap seperti laporan lama.
+- Tombol pensil (ubah) tersedia di: titipan (Beranda dan Outlet), nama outlet, pembayaran (Bayar dan Laporan), bahan baku, serta riwayat belanja/pemakaian bahan. Titipan di periode yang sudah ditutup tidak bisa diubah; tekan *Buka lagi* di menu Bayar (Tagihan yang sudah ditutup) bila perlu memperbaikinya.
+
 ## Catatan
 - Keamanan: semua data lewat `/api/data` dengan PIN. Setelah 10 kali salah PIN, alamat IP itu dikunci 10 menit.
 - Font memakai Google Fonts. Tanpa internet, tampilan memakai font cadangan.

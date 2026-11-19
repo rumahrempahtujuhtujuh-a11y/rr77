@@ -95,6 +95,7 @@ svg.ch{width:100%;height:auto;stroke:none;display:block}
 .c .v.r{color:#dc2626}
 .tag.ok{background:rgba(77,124,15,.14);color:var(--gr)}
 nav button{font-size:.6rem;letter-spacing:0}nav button svg{width:20px;height:20px}nav{padding:5px 3px}
+.x svg{width:18px;height:18px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -107,7 +108,7 @@ nav button{font-size:.6rem;letter-spacing:0}nav button svg{width:20px;height:20p
 <nav id="nav"></nav>
 
 <div class="sh" id="sh"><div>
-<h2>Tambah titipan</h2>
+<h2 id="fh2">Tambah titipan</h2>
 <label>Outlet</label><select id="fo"></select>
 <div class="two">
 <div><label>Tanggal</label><input type="date" id="fd"></div>
@@ -132,7 +133,8 @@ cash:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r
 box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/>',
 cal:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
 trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
-list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'};
+list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/>'};
 const ic=n=>`<svg viewBox="0 0 24 24">${I[n]}</svg>`;
 const DY=['Minggu','Senin','Selasa','Rabu','Kamis','Jum’at','Sabtu'];
 const MS=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
@@ -149,7 +151,7 @@ const LS={g:k=>{try{return localStorage.getItem(k)}catch(e){return null}},s:(k,v
 let S=null,REV=0,PIN=LS.g('rr77pin')||'',dirty=false,busy=false,stat='';
 const isD=s=>typeof s==='string'&&/^\d{4}-\d\d-\d\d$/.test(s),nu=n=>typeof n==='number'&&isFinite(n);
 const valid=d=>!!(d&&Array.isArray(d.outlets)&&d.outlets.length&&d.outlets.every(o=>o&&typeof o.name==='string'&&Array.isArray(o.items)&&o.items.every(i=>i&&isD(i.date)&&nu(i.qty)&&nu(i.price)&&typeof i.prod==='string'))&&(d.pay==null||Array.isArray(d.pay)&&d.pay.every(p=>p&&Number.isInteger(p.o)&&p.o>=0&&p.o<d.outlets.length&&nu(p.amt)&&isD(p.date)))&&(d.bahan==null||Array.isArray(d.bahan))&&(d.mov==null||Array.isArray(d.mov))&&(d.rek==null||Array.isArray(d.rek))&&(d.logo==null||/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(d.logo)));
-const norm=()=>{S.pay=S.pay||[];S.bahan=S.bahan||[];S.mov=S.mov||[];S.rek=S.rek||[]};
+const norm=()=>{S.pay=S.pay||[];S.pay.forEach(p=>{if(!p.id)p.id=uid()});S.bahan=S.bahan||[];S.mov=S.mov||[];S.rek=S.rek||[]};
 const lsData=()=>{try{const d=JSON.parse(LS.g('rr77v2')||'null');return valid(d)?d:null}catch(e){return null}};
 const cache=()=>{LS.s('rr77v2',JSON.stringify(S));LS.s('rr77rev',String(REV))};
 const setStat=t=>{stat=t;const e=$('#st');if(e)e.textContent=t};
@@ -207,29 +209,30 @@ function home(){
   const days=new Set(mon.map(i=>i.date)).size,tdI=all.filter(i=>i.date===td);
   const mx=all.reduce((a,i)=>!a||i.qty>a.qty?i:a,null);
   const PD=S.outlets.reduce((s,o,oi)=>s+paid(oi),0),OW=S.outlets.reduce((s,o,oi)=>s+Math.max(0,due(oi)),0),UN=S.outlets.filter((o,oi)=>due(oi)>0).length;
+  const UNI=[];S.outlets.forEach((o,oi)=>{const A=alloc(oi);sorted(o).forEach(i=>{if(A.get(i)[0]!=='Lunas')UNI.push(i)})});
   const DUE=S.outlets.map(o=>{const a=act(o);if(!a.length)return null;const f=a.reduce((m,i)=>i.date<m?i.date:m,a[0].date);return{n:short(o.name),d:Math.floor((pd(td)-pd(f))/864e5)+1}}).filter(x=>x&&x.d>=7);
   const rec=[...all].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
   const card=(n,l,v,d,g)=>`<div class="c"><div class="l">${ic(n)}${l}</div><div class="v ${g===2?'r':g?'g':''}">${v}</div><div class="d">${d}</div></div>`;
   return `<h1>Selamat ${hi}</h1><p class="sub">${DY[now.getDay()]}, ${now.getDate()} ${ML[now.getMonth()]} ${now.getFullYear()}</p>
-  <div class="acts"><button class="btn p" data-a="add">${ic('plus')}Tambah titipan</button><button class="btn" data-a="copyrep">${ic('copy')}Salin laporan</button></div>
+  <div class="acts"><button class="btn p" data-a="add">${ic('plus')}Tambah titipan</button><button class="btn" data-a="copyrep">${ic('copy')}Salin tagihan</button></div>
   ${S.backupAt?'':`<div class="ban">${ic('shield')}<div><p><b>Waktunya mencadangkan data.</b> Belum pernah dicadangkan. Salin cadangan lalu simpan ke WhatsApp pribadi atau catatan.</p><div class="r"><button class="btn p s" data-a="backup">Cadangkan sekarang</button><a data-a="later">Nanti</a></div></div></div>`}
   ${msg?`<div class="ban" style="background:var(--pri2);color:var(--pri)"><b>${msg}</b></div>`:''}
   ${DUE.map(x=>`<div class="ban" style="background:var(--wn);color:var(--wt)"><div><p><b>Outlet ${esc(x.n)}: titipan sudah ${x.d} hari.</b> Saatnya ditagih, lalu tutup tagihan di menu Bayar.</p><div class="r"><button class="btn p s" data-t="pay">Buka menu Bayar</button></div></div></div>`).join('')}
-  <div class="hero"><small>TOTAL TITIPAN · ${ML[now.getMonth()].toUpperCase()}</small><div class="hv">Rp ${rp(t)}</div><div class="hd2"><span>${por} porsi</span><span>${days} hari</span><span>${S.outlets.length} outlet</span></div></div>
+  <div class="hero"><small>TAGIHAN BERJALAN · TITIPAN BELUM LUNAS</small><div class="hv">Rp ${rp(OW)}</div><div class="hd2"><span>${UNI.length} titipan</span><span>${UNI.reduce((x,i)=>x+i.qty,0)} porsi</span><span>${UN} outlet</span></div></div>
   <div class="grid">
   ${card('box','Hari ini',tdI.reduce((s,i)=>s+i.qty,0)+' porsi','Rp '+rp(tdI.reduce((s,i)=>s+i.qty*i.price,0)))}
   ${card('trend','Rata-rata/hari','Rp '+rp(days?t/days:0),'bulan '+ML[now.getMonth()])}
   ${card('store','Outlet aktif',S.outlets.length,S.outlets.map(o=>short(o.name)).join(', ')||'-')}
   ${card('list','Tertinggi',mx?mx.qty+' porsi':'-',mx?fd(mx.date):'belum ada data')}
-   ${card('cash','Tagihan berjalan','Rp '+rp(OW),UN+' outlet belum lunas',OW>0?2:1)}${card('doc','Sudah diterima','Rp '+rp(PD),'periode berjalan',1)}
+   ${card('cal','Titipan '+ML[now.getMonth()],'Rp '+rp(t),por+' porsi · '+days+' hari')}${card('doc','Sudah diterima','Rp '+rp(PD),'periode berjalan',1)}
   </div>
-  <div class="sec">Titipan terbaru</div><div class="c">${rec.length?rec.map(i=>`<div class="row"><div><b>${fd(i.date)}</b><div class="m">${i.qty} ${esc(i.prod)}</div></div><div style="text-align:right"><b>Rp ${rp(i.qty*i.price)}</b><div><span class="tag">${esc(short(i.o))}</span></div></div></div>`).join(''):'<div class="m">Belum ada titipan.</div>'}</div>`+ana();
+  <div class="sec">Titipan terbaru</div><div class="c">${rec.length?rec.map(i=>`<div class="row"><div><b>${fd(i.date)}</b><div class="m">${i.qty} ${esc(i.prod)}</div></div><div style="text-align:right"><b>Rp ${rp(i.qty*i.price)}</b><div><span class="tag">${esc(short(i.o))}</span></div></div>${i.c?'':`<button class="x" data-a="edit" data-o="${i.oi}" data-i="${i.ix}" aria-label="Ubah titipan">${ic('edit')}</button>`}</div>`).join(''):'<div class="m">Belum ada titipan.</div>'}</div>`+ana();
 }
 function out(){
   const AL=S.outlets.map((o,oi)=>alloc(oi));
   return `<h1>Outlet</h1><p class="sub">Daftar titipan per outlet</p><div class="acts"><button class="btn p" data-a="addo">${ic('plus')}Tambah outlet</button></div>`+
-  S.outlets.map((o,oi)=>`<div class="c" style="margin-bottom:12px"><div class="row" style="padding-top:0"><div><b>Outlet ${esc(o.name)}</b><div class="m">${act(o).length} entri berjalan</div></div><div style="text-align:right"><b style="color:var(--gr)">Rp ${rp(tot(o))}</b><div class="m">Sisa Rp ${rp(tot(o)-paid(oi))}</div><div><button class="btn s" data-a="add" data-o="${oi}" style="margin-top:4px;padding:6px 10px">+ Titipan</button></div></div></div>`+
-  sorted(o).map(i=>`<div class="row"><div><b>${fd(i.date)}</b><div class="m">${i.qty} ${esc(i.prod)} · <span class="tag ${AL[oi].get(i)[1]}">${AL[oi].get(i)[0]}</span></div></div><div>Rp ${rp(i.qty*i.price)}<button class="x" aria-label="Hapus titipan" data-a="del" data-o="${oi}" data-i="${o.items.indexOf(i)}">×</button></div></div>`).join('')+`</div>`).join('');
+  S.outlets.map((o,oi)=>`<div class="c" style="margin-bottom:12px"><div class="row" style="padding-top:0"><div><b>Outlet ${esc(o.name)}</b><button class="x" data-a="edito" data-o="${oi}" aria-label="Ubah nama outlet">${ic('edit')}</button><div class="m">${act(o).length} entri berjalan</div></div><div style="text-align:right"><b style="color:var(--gr)">Rp ${rp(tot(o))}</b><div class="m">Sisa Rp ${rp(tot(o)-paid(oi))}</div><div><button class="btn s" data-a="add" data-o="${oi}" style="margin-top:4px;padding:6px 10px">+ Titipan</button></div></div></div>`+
+  sorted(o).map(i=>`<div class="row"><div><b>${fd(i.date)}</b><div class="m">${i.qty} ${esc(i.prod)} · <span class="tag ${AL[oi].get(i)[1]}">${AL[oi].get(i)[0]}</span></div></div><div>Rp ${rp(i.qty*i.price)}<button class="x" aria-label="Ubah titipan" data-a="edit" data-o="${oi}" data-i="${o.items.indexOf(i)}">${ic('edit')}</button><button class="x" aria-label="Hapus titipan" data-a="del" data-o="${oi}" data-i="${o.items.indexOf(i)}">×</button></div></div>`).join('')+`</div>`).join('');
 }
 function report(){
   let t='Bismillah,  list titipan '+(S.nama||'RR77')+' :\n';
@@ -238,7 +241,26 @@ function report(){
   if(S.outlets.length>1&&S.pay.length)t+=`Sudah dibayar semua : Rp.${rp(S.outlets.reduce((s,o,oi)=>s+paid(oi),0))},-\n*Sisa semua : Rp.${rp(S.outlets.reduce((s,o,oi)=>s+tot(o)-paid(oi),0))},-*\n`;
   return t;
 }
-function rep(){return `<h1>Laporan</h1><p class="sub">Siap ditempel ke WhatsApp</p><textarea readonly id="rt">${esc(report())}</textarea><div class="acts" style="margin-top:12px"><button class="btn p" data-a="copyrep">${ic('copy')}Salin laporan</button></div>${msg?`<p><b>${msg}</b></p>`:''}`}
+// Tiap pembayaran = satu klaster. Pembayaran dialokasikan ke titipan paling lama lebih dulu (sama seperti label Lunas/Sebagian).
+function clus(oi,cid){
+  const o=S.outlets[oi],cin=x=>cid?x.c===cid:!x.c;
+  const its=o.items.filter(cin).sort((a,b)=>a.date.localeCompare(b.date)).map(i=>({i,full:i.qty*i.price,left:i.qty*i.price}));
+  const ps=S.pay.filter(p=>p.o===oi&&cin(p)).sort((a,b)=>a.date.localeCompare(b.date));
+  let k=0;
+  return ps.map(p=>{let rem=p.amt;const L=[];
+    while(rem>0&&k<its.length){const t=its[k],u=Math.min(rem,t.left),bf=t.full-t.left;if(u>0)L.push({i:t.i,u,full:t.full,bf,rest:t.left-u});t.left-=u;rem-=u;if(t.left<=0)k++}
+    return{p,L,lebih:rem,oi,cid}});
+}
+function CL(){const r=[];S.outlets.forEach((o,oi)=>{[undefined,...(S.rek||[]).filter(x=>x.o===oi).map(x=>x.id)].forEach(cid=>clus(oi,cid).forEach(c=>r.push(c)))});return r.sort((a,b)=>b.p.date.localeCompare(a.p.date))}
+function ctext(c){const o=S.outlets[c.oi],p=c.p;let t='Bismillah,  rekap titipan '+(S.nama||'RR77')+' :\n\nOutlet '+o.name+'\nPembayaran '+fd(p.date)+' ('+(p.m||'Tunai')+')'+(p.ket?' - '+p.ket:'')+'\n\n';
+  c.L.forEach((l,n)=>{t+=`${n+1}. ${fd(l.i.date)} - ${l.i.qty} ${l.i.prod} Rp. ${rp(l.full)}`+(l.rest>0||l.bf>0?` (dibayar Rp. ${rp(l.u)}${l.rest>0?', sisa Rp. '+rp(l.rest):''})`:'')+'\n'});
+  t+=`\n*Total dibayar : Rp.${rp(p.amt)},-*\n`;if(c.lebih>0)t+=`Kelebihan bayar : Rp.${rp(c.lebih)},-\n`;return t}
+function rep(){
+  const cl=CL(),OW=S.outlets.reduce((s,o,oi)=>s+Math.max(0,due(oi)),0);
+  const note=l=>l.rest>0?` · dibayar Rp ${rp(l.u)}${l.bf>0?' (sebelumnya Rp '+rp(l.bf)+')':''}, sisa Rp ${rp(l.rest)}`:(l.bf>0?` · pelunasan Rp ${rp(l.u)}`:'');
+  return `<h1>Laporan</h1><p class="sub">Rekap titipan sesuai pembayaran yang sudah masuk</p>${cl.length?`<div class="acts"><button class="btn p" data-a="copyall">${ic('copy')}Salin semua rekap</button></div>`:''}${msg?`<p><b>${msg}</b></p>`:''}
+  ${cl.length?cl.slice(0,40).map(c=>{const p=c.p;return `<div class="c" style="margin-bottom:12px"><div class="row" style="padding-top:0"><div><b class="serif" style="font-size:1.1rem">Outlet ${esc(S.outlets[c.oi].name)}</b><div class="m">Dibayar ${fd(p.date)} · ${esc(p.m||'Tunai')}${p.ket?' · '+esc(p.ket):''}</div></div><div style="text-align:right"><b style="color:var(--gr)">Rp ${rp(p.amt)}</b>${c.cid?'<div><span class="tag">ditutup</span></div>':''}</div></div>${c.L.map(l=>`<div class="row"><div><b>${fd(l.i.date)}</b><div class="m">${l.i.qty} ${esc(l.i.prod)} · Rp ${rp(l.full)}${note(l)}</div></div><div>Rp ${rp(l.u)}</div></div>`).join('')}${c.lebih>0?`<div class="row"><div class="m">Kelebihan bayar</div><div>Rp ${rp(c.lebih)}</div></div>`:''}<div class="acts" style="margin:10px 0 0"><button class="btn s" data-a="copyc" data-id="${p.id}">${ic('copy')}Salin rekap</button>${c.cid?'':`<button class="btn s" data-a="pedit" data-id="${p.id}">Ubah pembayaran</button>`}</div></div>`}).join(''):'<div class="c"><span class="d">Belum ada pembayaran yang masuk. Rekap muncul setelah pembayaran dicatat di menu Bayar.</span></div>'}
+  ${OW>0?`<div class="d" style="margin:4px 4px 0">Tagihan berjalan Rp ${rp(OW)} belum masuk rekap karena belum dibayar.</div>`:''}`}
 function more(){return `<h1>Lainnya</h1><p class="sub">Profil usaha, cadangan, dan data</p>
 ${LS.g('rr77lost')?`<div class="c" style="margin-bottom:12px"><b>Data yang tertimpa</b><p class="m">Perubahan dari perangkat ini tertimpa data server yang lebih baru. Salinannya masih tersimpan.</p><button class="btn s" data-a="copylost">Salin</button> <button class="btn s" data-a="droplost">Buang</button></div>`:''}<div class="c" style="margin-bottom:12px"><b>Penyimpanan</b><p class="m">Data tersimpan di server Vercel dan disalin di perangkat ini. Status: ${esc(stat||'-')}</p><button class="btn s" data-a="logout">Keluar</button></div><div class="c" style="margin-bottom:12px"><b>Profil usaha</b><label>Nama usaha</label><input id="nm" value="${esc(S.nama||'RR77')}" maxlength="40"><button class="btn p s" data-a="savenm" style="margin-top:10px">Simpan nama</button><label style="margin-top:18px">Logo</label><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div class="logo ${S.logo?'has':''}" style="width:64px;height:64px">${S.logo?`<img src="${S.logo}" alt="Logo">`:ic('store')}</div><div><label class="btn s" for="lg" style="margin:0;text-transform:none;letter-spacing:0">Pilih logo</label><input type="file" id="lg" accept="image/*" style="display:none">${S.logo?`<button class="btn s" data-a="rmlogo" style="margin-left:8px">Hapus</button>`:''}</div></div></div>
 <div class="c"><b>Cadangkan data</b><p class="m">Salin data ke clipboard, lalu simpan di WhatsApp pribadi atau catatan.${S.backupAt?' Terakhir: '+new Date(S.backupAt).toLocaleDateString('id-ID'):''}</p><button class="btn p s" data-a="backup">${ic('copy')}Salin cadangan</button></div>
@@ -305,30 +327,31 @@ function bahan(){
   <div class="sec">Sisa stok</div>
   ${st.length?st.map(b=>{const k=b.sisa<=0?['Habis','d']:b.sisa<=(b.min||0)?['Menipis','w']:['Aman',''];return `<div class="c" style="margin-bottom:12px" data-a="eb" data-id="${b.id}"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">${esc(b.nama)}</b><span class="tag ${k[1]}">${k[0]}</span></div><div class="v" style="font-size:1.8rem;font-weight:700">${fq(b.sisa)} <span class="d" style="font-size:.9rem">${esc(b.sat)}</span></div><div class="tr" style="margin:8px 0"><i style="width:${b.qi>0?Math.max(0,Math.min(100,b.sisa/b.qi*100)):0}%"></i></div><div class="ms"><div>Total masuk<b>${fq(b.qi)} ${esc(b.sat)}</b></div><div>Total keluar<b>${fq(b.qo)} ${esc(b.sat)}</b></div><div>Harga rata-rata<b>Rp ${rp(b.avg)}/${esc(b.sat)}</b></div><div>Nilai stok<b>Rp ${rp(b.nilai)}</b></div></div><div class="d">Stok minimum ${fq(b.min||0)} ${esc(b.sat)} · ketuk untuk ubah</div></div>`}).join(''):'<div class="c"><span class="d">Belum ada bahan baku. Tekan "+ Bahan" untuk menambah, mis. beras, ayam, atau bumbu.</span></div>'}
   ${byb.length?`<div class="sec">Pengeluaran per bahan</div><div class="c">${hb(byb.map(r=>({l:r.l,v:r.v,t:'Rp '+rp(r.v)})))}</div>`:''}
-  <div class="sec">Riwayat</div><div class="c">${mv.length?mv.map(x=>{const b=bn(x.b);return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${x.t==='in'?(x.awal?'Stok awal':'Belanja'):(x.jenis||'Pakai')} · ${esc(b.nama)}${x.ket&&!x.awal?' · '+esc(x.ket):''}</div></div><div style="text-align:right">${x.t==='in'?'+':'−'}${fq(x.qty)} ${esc(b.sat)}${x.t==='in'?'<div class="m">Rp '+rp(x.total)+'</div>':''}</div><button class="x" data-a="delmv" data-id="${x.id}">×</button></div>`}).join(''):'<span class="d">Belum ada riwayat.</span>'}</div>
+  <div class="sec">Riwayat</div><div class="c">${mv.length?mv.map(x=>{const b=bn(x.b);return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${x.t==='in'?(x.awal?'Stok awal':'Belanja'):(x.jenis||'Pakai')} · ${esc(b.nama)}${x.ket&&!x.awal?' · '+esc(x.ket):''}</div></div><div style="text-align:right">${x.t==='in'?'+':'−'}${fq(x.qty)} ${esc(b.sat)}${x.t==='in'?'<div class="m">Rp '+rp(x.total)+'</div>':''}</div><button class="x" data-a="emv" data-id="${x.id}" aria-label="Ubah">${ic('edit')}</button><button class="x" data-a="delmv" data-id="${x.id}">×</button></div>`}).join(''):'<span class="d">Belum ada riwayat.</span>'}</div>
   <div class="acts" style="margin-top:12px"><button class="btn" data-a="copyb">${ic('copy')}Salin rekap bahan</button></div>`;
 }
-function openG(m,id){
+function openG(m,id,mvid){
   const st=stock();if((m==='in'||m==='out')&&!st.length){m='master';id=''}
-  GS={m,id:id||'',w:0};const today=iso(new Date());
+  const MV=mvid?S.mov.find(x=>x.id===mvid):null;GS={m,id:id||'',w:0,mv:MV?MV.id:''};const today=iso(new Date());
   const opt=st.map(b=>`<option value="${b.id}">${esc(b.nama)} (${m==='out'?'sisa '+fq(b.sisa)+' ':''}${esc(b.sat)})</option>`).join('');
   const e=st.find(b=>b.id===id)||{};
   let h='';
-  if(m==='in')h=`<h2>Belanja bahan</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Total harga (Rp)</label><input type="number" id="b4" inputmode="numeric"></div><div><label>Toko / catatan</label><input id="b5"></div></div><div class="d" id="b6" style="margin-top:8px"></div>`;
-  else if(m==='out')h=`<h2>Pakai / keluar</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Jenis</label><select id="b4"><option>Pemakaian produksi</option><option>Rusak / terbuang</option><option>Koreksi stok</option></select></div><div><label>Catatan</label><input id="b5"></div></div>`;
+  if(m==='in')h=`<h2>${MV?'Ubah belanja':'Belanja bahan'}</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Total harga (Rp)</label><input type="number" id="b4" inputmode="numeric"></div><div><label>Toko / catatan</label><input id="b5"></div></div><div class="d" id="b6" style="margin-top:8px"></div>`;
+  else if(m==='out')h=`<h2>${MV?'Ubah pemakaian':'Pakai / keluar'}</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Jenis</label><select id="b4"><option>Pemakaian produksi</option><option>Rusak / terbuang</option><option>Koreksi stok</option></select></div><div><label>Catatan</label><input id="b5"></div></div>`;
   else h=`<h2>${id?'Ubah bahan':'Bahan baru'}</h2><label>Nama bahan</label><input id="b1" value="${esc(e.nama||'')}" placeholder="mis. Beras"><div class="two"><div><label>Satuan</label><input id="b2" list="sat" value="${esc(e.sat||'')}" placeholder="kg"><datalist id="sat"><option>kg</option><option>gram</option><option>liter</option><option>pcs</option><option>ikat</option><option>pack</option><option>butir</option></datalist></div><div><label>Stok minimum</label><input type="number" id="b3" step="any" value="${e.min||0}"></div></div>${id?'':'<div class="two"><div><label>Stok awal</label><input type="number" id="b4" step="any" placeholder="0"></div><div><label>Harga/satuan awal (Rp)</label><input type="number" id="b5" placeholder="0"></div></div>'}`;
   h+=`<div class="d" id="b9" style="color:#dc2626;margin-top:8px"></div><div class="acts" style="margin:14px 0 0"><button class="btn p" data-a="s2save" style="flex:1;justify-content:center">Simpan</button>${id&&m==='master'?'<button class="btn" data-a="delb" id="bd">Hapus</button>':''}<button class="btn" data-a="s2close">Batal</button></div>`;
-  $('#sh2b').innerHTML=h;if(id&&m!=='master')$('#b1').value=id;$('#sh2').classList.add('on');
+  $('#sh2b').innerHTML=h;if(id&&m!=='master')$('#b1').value=id;
+  if(MV){$('#b1').value=MV.b;$('#b2').value=MV.date;$('#b3').value=MV.qty;$('#b5').value=MV.ket||'';if(MV.t==='in'){$('#b4').value=MV.total;$('#b6').textContent=MV.qty>0&&MV.total>0?'Harga per satuan: Rp '+rp(MV.total/MV.qty):''}else $('#b4').value=MV.jenis||'Pemakaian produksi'}$('#sh2').classList.add('on');
 }
 function saveG(){
   const m=GS.m,v=i=>{const x=$('#b'+i);return x?x.value:''},err=t=>{$('#b9').textContent=t};
   if(m==='master'){const n=v(1).trim(),sat=v(2).trim();if(!n||!sat)return err('Nama dan satuan wajib diisi');
     if(GS.id){const b=S.bahan.find(x=>x.id===GS.id);b.nama=n;b.sat=sat;b.min=+v(3)||0}
     else{const b={id:uid(),nama:n,sat,min:+v(3)||0};S.bahan.push(b);const q=+v(4)||0;if(q>0)S.mov.push({id:uid(),t:'in',b:b.id,date:iso(new Date()),qty:q,total:q*(+v(5)||0),awal:1,ket:'Stok awal'})}}
-  else if(m==='in'){const q=+v(3),t=+v(4);if(!(q>0)||!(t>0)||!v(2))return err('Isi tanggal, jumlah, dan total harga');S.mov.push({id:uid(),t:'in',b:v(1),date:v(2),qty:q,total:t,ket:v(5).trim()})}
-  else{const q=+v(3);if(!(q>0)||!v(2))return err('Isi tanggal dan jumlah');const s=stock().find(x=>x.id===v(1));
-    if(s&&q>s.sisa&&!GS.w){GS.w=1;return err('Jumlah melebihi sisa stok ('+fq(s.sisa)+' '+s.sat+'). Tekan Simpan lagi untuk melanjutkan.')}
-    S.mov.push({id:uid(),t:'out',b:v(1),date:v(2),qty:q,jenis:v(4),ket:v(5).trim()})}
+  else if(m==='in'){const q=+v(3),t=+v(4);if(!(q>0)||!(t>0)||!v(2))return err('Isi tanggal, jumlah, dan total harga');const E=GS.mv&&S.mov.find(x=>x.id===GS.mv);if(E)Object.assign(E,{b:v(1),date:v(2),qty:q,total:t,ket:v(5).trim()});else S.mov.push({id:uid(),t:'in',b:v(1),date:v(2),qty:q,total:t,ket:v(5).trim()})}
+  else{const q=+v(3);if(!(q>0)||!v(2))return err('Isi tanggal dan jumlah');const s=stock().find(x=>x.id===v(1)),E=GS.mv&&S.mov.find(x=>x.id===GS.mv),lim=s?s.sisa+(E&&E.b===s.id?E.qty:0):0;
+    if(s&&q>lim&&!GS.w){GS.w=1;return err('Jumlah melebihi sisa stok ('+fq(lim)+' '+s.sat+'). Tekan Simpan lagi untuk melanjutkan.')}
+    if(E)Object.assign(E,{b:v(1),date:v(2),qty:q,jenis:v(4),ket:v(5).trim()});else S.mov.push({id:uid(),t:'out',b:v(1),date:v(2),qty:q,jenis:v(4),ket:v(5).trim()})}
   save();$('#sh2').classList.remove('on');msg='Tersimpan';render();
 }
 document.addEventListener('input',e=>{if(GS.m==='pay'&&/^p[13]$/.test(e.target.id)){payPrev();return}if(GS.m==='in'&&(e.target.id==='b3'||e.target.id==='b4')){const q=+$('#b3').value,t=+$('#b4').value;$('#b6').textContent=q>0&&t>0?'Harga per satuan: Rp '+rp(t/q):''}});
@@ -345,10 +368,10 @@ function pay(){
   <div class="hero"><small>BELUM DIBAYAR · SEMUA OUTLET</small><div class="hv">Rp ${rp(D)}</div><div class="hd2"><span>Titipan Rp ${rp(T)}</span><span>Dibayar Rp ${rp(P)}</span></div></div>
   <div class="acts"><button class="btn p" data-a="addpay">${ic('plus')}Catat pembayaran</button></div>
   ${msg?`<p><b>${msg}</b></p>`:''}
-  ${rows.map(r=>{const s=pst(r.t,r.p);return `<div class="c" style="margin-bottom:12px"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">Outlet ${esc(r.o.name)}</b><span class="tag ${s[1]}">${s[0]}</span></div><div class="ms"><div>Total titipan<b>Rp ${rp(r.t)}</b></div><div>Sudah dibayar<b>Rp ${rp(r.p)}</b></div></div><div class="tr"><i style="width:${r.t>0?Math.min(100,Math.max(0,r.p/r.t*100)):0}%"></i></div><div class="row" style="margin-top:8px"><div><div class="m">Sisa tagihan</div><b class="serif" style="font-size:1.35rem;${r.s>0?'':'color:var(--gr)'}">${sg(r.s)}</b></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">${r.t>0?`<button class="btn s" data-a="close" data-o="${r.oi}">Tutup tagihan</button>`:''}<button class="btn s" data-a="addpay" data-o="${r.oi}">Bayar</button>${r.s>0?`<button class="btn p s" data-a="addpay" data-o="${r.oi}" data-f="1">Lunasi</button>`:''}</div></div></div>`}).join('')}
-  <div class="sec">Riwayat pembayaran</div><div class="c">${hist.length?hist.map(x=>{const o=S.outlets[x.o]||{name:'?'};return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${esc(short(o.name))} · ${esc(x.m||'Tunai')}${x.ket?' · '+esc(x.ket):''}</div></div><div style="text-align:right">+Rp ${rp(x.amt)}<button class="x" data-a="pdel" data-id="${x.id}" aria-label="Hapus pembayaran">×</button></div></div>`}).join(''):'<span class="d">Belum ada pembayaran.</span>'}</div>`+rekHtml();
+  ${rows.map(r=>{const s=pst(r.t,r.p);return `<div class="c" style="margin-bottom:12px"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">Outlet ${esc(r.o.name)}</b><span class="tag ${s[1]}">${s[0]}</span></div><div class="ms"><div>Total titipan<b>Rp ${rp(r.t)}</b></div><div>Sudah dibayar<b>Rp ${rp(r.p)}</b></div></div><div class="tr"><i style="width:${r.t>0?Math.min(100,Math.max(0,r.p/r.t*100)):0}%"></i></div><div class="row" style="margin-top:8px"><div><div class="m">Sisa tagihan</div><b class="serif" style="font-size:1.35rem;${r.s>0?'':'color:var(--gr)'}">${sg(r.s)}</b></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">${r.t>0?`<button class="btn s" data-a="tutup" data-o="${r.oi}">Tutup tagihan</button>`:''}<button class="btn s" data-a="addpay" data-o="${r.oi}">Bayar</button>${r.s>0?`<button class="btn p s" data-a="addpay" data-o="${r.oi}" data-f="1">Lunasi</button>`:''}</div></div></div>`}).join('')}
+  <div class="sec">Riwayat pembayaran</div><div class="c">${hist.length?hist.map(x=>{const o=S.outlets[x.o]||{name:'?'};return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${esc(short(o.name))} · ${esc(x.m||'Tunai')}${x.ket?' · '+esc(x.ket):''}</div></div><div style="text-align:right">+Rp ${rp(x.amt)}<button class="x" data-a="pedit" data-id="${x.id}" aria-label="Ubah pembayaran">${ic('edit')}</button><button class="x" data-a="pdel" data-id="${x.id}" aria-label="Hapus pembayaran">×</button></div></div>`}).join(''):'<span class="d">Belum ada pembayaran.</span>'}</div>`+rekHtml();
 }
-function rekHtml(){const R=[...(S.rek||[])].reverse().slice(0,20);return `<div class="sec">Tagihan yang sudah ditutup</div><div class="c">${R.length?R.map(r=>{const o=S.outlets[r.o]||{name:'?'};return `<div class="row"><div><b>Outlet ${esc(short(o.name))}</b><div class="m">${fd(r.from)} s/d ${fd(r.to)} · ${r.por} porsi</div><div class="m">Total Rp ${rp(r.total)} · Dibayar Rp ${rp(r.paid)}${r.sisa>0?' · <b style="color:#dc2626">Sisa Rp '+rp(r.sisa)+'</b>':''}</div></div><button class="btn s" data-a="copyrek" data-id="${r.id}">Salin</button></div>`}).join(''):'<span class="d">Belum ada tagihan yang ditutup.</span>'}</div>`}
+function rekHtml(){const R=[...(S.rek||[])].reverse().slice(0,20);return `<div class="sec">Tagihan yang sudah ditutup</div><div class="c">${R.length?R.map(r=>{const o=S.outlets[r.o]||{name:'?'};return `<div class="row"><div><b>Outlet ${esc(short(o.name))}</b><div class="m">${fd(r.from)} s/d ${fd(r.to)} · ${r.por} porsi</div><div class="m">Total Rp ${rp(r.total)} · Dibayar Rp ${rp(r.paid)}${r.sisa>0?' · <b style="color:#dc2626">Sisa Rp '+rp(r.sisa)+'</b>':''}</div></div><div style="display:flex;gap:6px"><button class="btn s" data-a="copyrek" data-id="${r.id}">Salin</button><button class="btn s" data-a="reopen" data-id="${r.id}">Buka lagi</button></div></div>`}).join(''):'<span class="d">Belum ada tagihan yang ditutup.</span>'}</div>`}
 function rtext(r){const o=S.outlets[r.o]||{name:'?',items:[]},it=o.items.filter(i=>i.c===r.id).sort((a,b)=>a.date.localeCompare(b.date));let t='Bismillah,  list titipan '+(S.nama||'RR77')+' :\n\nOutlet '+o.name+'\n';it.forEach((i,n)=>{t+=`${n+1}. ${fd(i.date)} - ${i.qty} ${i.prod} Rp. ${rp(i.qty*i.price)}\n`});t+=`\n*Total ${short(o.name)} : Rp.${rp(r.total)},-*\nSudah dibayar : Rp.${rp(r.paid)},-\n*Sisa ${short(o.name)} : Rp.${rp(r.sisa)},-*\n`;return t}
 function closeP(oi){const o=S.outlets[oi],a=act(o);if(!a.length){msg='Belum ada titipan yang berjalan';render();return}
   const t=tot(o),p=paid(oi),s=t-p;
@@ -357,19 +380,23 @@ function closeP(oi){const o=S.outlets[oi],a=act(o);if(!a.length){msg='Belum ada 
   S.rek=S.rek||[];S.rek.push({id,o:oi,date:iso(new Date()),from:ds[0],to:ds[ds.length-1],n:a.length,por:a.reduce((x,i)=>x+i.qty,0),total:t,paid:p,sisa:s});
   a.forEach(i=>{i.c=id});S.pay.forEach(x=>{if(x.o===oi&&!x.c)x.c=id});
   save();msg='Tagihan ditutup. Periode baru dimulai dari 0';render()}
-function payPrev(){const e=$('#p6');if(!e||!$('#p3'))return;GS.w=0;const s=due(+$('#p1').value),a=+$('#p3').value||0;e.textContent='Sisa tagihan sekarang: Rp '+rp(Math.max(s,0))+(a>0?' · setelah dibayar: Rp '+rp(Math.max(s-a,0)):'')}
-function openP(oi,full){
-  GS={m:'pay',id:'',w:0};const s=due(oi);
-  $('#sh2b').innerHTML=`<h2>Catat pembayaran</h2><label>Outlet</label><select id="p1">${S.outlets.map((o,i)=>`<option value="${i}">${esc(o.name)}</option>`).join('')}</select><div class="two"><div><label>Tanggal</label><input type="date" id="p2" value="${iso(new Date())}"></div><div><label>Jumlah (Rp)</label><input type="number" id="p3" inputmode="numeric" min="1" value="${full&&s>0?s:''}"></div><div><label>Cara bayar</label><select id="p4"><option>Tunai</option><option>Transfer</option><option>QRIS</option></select></div><div><label>Catatan</label><input id="p5" maxlength="60"></div></div><div class="d" id="p6" style="margin-top:8px"></div><div class="d" id="p9" style="color:#dc2626;margin-top:8px"></div><div class="acts" style="margin:14px 0 0"><button class="btn p" data-a="s2save" style="flex:1;justify-content:center">Simpan</button><button class="btn" data-a="s2close">Batal</button></div>`;
-  $('#p1').value=oi;payPrev();$('#sh2').classList.add('on');
+function payPrev(){const e=$('#p6');if(!e||!$('#p3'))return;GS.w=0;const s=dueE(+$('#p1').value),a=+$('#p3').value||0;e.textContent='Sisa tagihan sekarang: Rp '+rp(Math.max(s,0))+(a>0?' · setelah dibayar: Rp '+rp(Math.max(s-a,0)):'')}
+const pold=()=>GS.id?S.pay.find(x=>x.id===GS.id):null;
+const dueE=oi=>{const e=pold();return due(oi)+(e&&e.o===oi&&!e.c?e.amt:0)};
+function openP(oi,full,pid){
+  const E=pid?S.pay.find(x=>x.id===pid):null;
+  GS={m:'pay',id:E?E.id:'',w:0};const s=due(oi);
+  $('#sh2b').innerHTML=`<h2>${E?'Ubah pembayaran':'Catat pembayaran'}</h2><label>Outlet</label><select id="p1">${S.outlets.map((o,i)=>`<option value="${i}">${esc(o.name)}</option>`).join('')}</select><div class="two"><div><label>Tanggal</label><input type="date" id="p2" value="${E?E.date:iso(new Date())}"></div><div><label>Jumlah (Rp)</label><input type="number" id="p3" inputmode="numeric" min="1" value="${E?E.amt:(full&&s>0?s:'')}"></div><div><label>Cara bayar</label><select id="p4"><option>Tunai</option><option>Transfer</option><option>QRIS</option></select></div><div><label>Catatan</label><input id="p5" maxlength="60" value="${E?esc(E.ket||''):''}"></div></div><div class="d" id="p6" style="margin-top:8px"></div><div class="d" id="p9" style="color:#dc2626;margin-top:8px"></div><div class="acts" style="margin:14px 0 0"><button class="btn p" data-a="s2save" style="flex:1;justify-content:center">Simpan</button><button class="btn" data-a="s2close">Batal</button></div>`;
+  $('#p1').value=E?E.o:oi;if(E)$('#p4').value=E.m||'Tunai';payPrev();$('#sh2').classList.add('on');
 }
 function saveP(){
   const er=t=>{$('#p9').textContent=t},oi=+$('#p1').value,d=$('#p2').value,a=+$('#p3').value;
   if(!d||!(a>0))return er('Isi tanggal dan jumlah pembayaran');
-  const s=due(oi);
+  const s=dueE(oi);
   if(a>s&&!GS.w){GS.w=1;return er('Jumlah melebihi sisa tagihan (Rp '+rp(Math.max(s,0))+'). Tekan Simpan lagi untuk melanjutkan.')}
-  S.pay.push({id:uid(),o:oi,date:d,amt:Math.round(a),m:$('#p4').value,ket:$('#p5').value.trim()});
-  save();$('#sh2').classList.remove('on');msg='Pembayaran tersimpan';render();
+  const e=pold(),rec={o:oi,date:d,amt:Math.round(a),m:$('#p4').value,ket:$('#p5').value.trim()};
+  if(e)Object.assign(e,rec);else S.pay.push({id:uid(),...rec});
+  save();$('#sh2').classList.remove('on');msg=e?'Pembayaran diperbarui':'Pembayaran tersimpan';render();
 }
 const V={home,out,pay,bhn:bahan,rep,more};
 function render(){
@@ -381,27 +408,37 @@ function render(){
   $('#nav').innerHTML=NAV.map(([k,i,l])=>`<button class="${tab===k?'on':''}" data-t="${k}">${ic(i)}${l}${k==='more'&&!S.backupAt?'<span class="dot"></span>':''}</button>`).join('');
 }
 async function cp(t){try{await navigator.clipboard.writeText(t);return 1}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=0;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}}
-function openSheet(oi){
+let ED=null,LASTP={p:'Nasi bakar',h:10000};
+function openSheet(oi,ix){
+  const it=(ix!=null&&S.outlets[oi])?S.outlets[oi].items[ix]:null;ED=it?{o:oi,i:ix}:null;
   $('#fo').innerHTML=S.outlets.map((o,i)=>`<option value="${i}">${esc(o.name)}</option>`).join('');
-  $('#fo').value=oi||0;$('#fd').value=iso(new Date());$('#fq').value='';$('#sh').classList.add('on');
+  $('#fo').value=oi||0;$('#fh2').textContent=it?'Ubah titipan':'Tambah titipan';
+  $('#fd').value=it?it.date:iso(new Date());$('#fq').value=it?it.qty:'';$('#fp').value=it?it.prod:LASTP.p;$('#fh').value=it?it.price:LASTP.h;
+  $('#sh').classList.add('on');
 }
 document.addEventListener('click',async e=>{
   const t=e.target.closest('[data-t]');if(t){tab=t.dataset.t;msg='';render();window.scrollTo(0,0);return}
   const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sh')$('#sh').classList.remove('on');if(e.target.id==='sh2')$('#sh2').classList.remove('on');return}
   const a=b.dataset.a;msg='';
   if(a==='add')openSheet(+b.dataset.o||0);
+  else if(a==='edit')openSheet(+b.dataset.o,+b.dataset.i);
   else if(a==='close')$('#sh').classList.remove('on');
   else if(a==='save'){const q=+$('#fq').value,p=+$('#fh').value,d=$('#fd').value;if(!q||!p||!d)return;
-    S.outlets[$('#fo').value].items.push({date:d,qty:q,prod:$('#fp').value.trim()||'Nasi bakar',price:p});save();$('#sh').classList.remove('on');msg='Titipan tersimpan';render()}
+    const pr=$('#fp').value.trim()||'Nasi bakar',ni=+$('#fo').value;
+    if(ED){const src=S.outlets[ED.o],n={...src.items[ED.i],date:d,qty:q,prod:pr,price:p};if(ni===ED.o)src.items[ED.i]=n;else{src.items.splice(ED.i,1);S.outlets[ni].items.push(n)}ED=null;msg='Titipan diperbarui'}
+    else{S.outlets[ni].items.push({date:d,qty:q,prod:pr,price:p});LASTP={p:pr,h:p};msg='Titipan tersimpan'}
+    save();$('#sh').classList.remove('on');render()}
+  else if(a==='edito'){const o=S.outlets[+b.dataset.o],n=prompt('Nama outlet',o.name);if(n&&n.trim()){o.name=n.trim();save();msg='Nama outlet diperbarui';render()}}
   else if(a==='addo'){const n=prompt('Nama outlet (mis. SJ TSM)');if(n&&n.trim()){S.outlets.push({name:n.trim(),items:[]});save();render()}}
   else if(a==='del'){if(!confirm('Hapus titipan ini?'))return;S.outlets[b.dataset.o].items.splice(b.dataset.i,1);save();render()}
-  else if(a==='copyrep'){msg=(await cp(report()))?'Laporan tersalin':'Gagal menyalin, salin manual dari tab Laporan';render()}
+  else if(a==='copyrep'){msg=(await cp(report()))?'Tagihan tersalin':'Gagal menyalin';render()}
   else if(a==='backup'){msg=(await cp(JSON.stringify(S)))?'Cadangan tersalin':'Gagal menyalin';if(msg==='Cadangan tersalin'){S.backupAt=Date.now();save()}render()}
   else if(a==='savenm'){S.nama=$('#nm').value.trim()||'RR77';save();msg='Nama usaha disimpan';render()}
   else if(a==='rmlogo'){delete S.logo;save();msg='Logo dihapus';render()}
   else if(a==='bin'||a==='bout'||a==='bnew'||a==='eb')openG(a==='bin'?'in':a==='bout'?'out':'master',b.dataset.id)
   else if(a==='s2close')$('#sh2').classList.remove('on');
   else if(a==='s2save'){if(GS.m==='pay')saveP();else saveG()}
+  else if(a==='emv'){const x=S.mov.find(y=>y.id===b.dataset.id);if(x)openG(x.t,x.b,x.id)}
   else if(a==='delmv'){if(!confirm('Hapus riwayat ini?'))return;S.mov=S.mov.filter(x=>x.id!==b.dataset.id);save();render()}
   else if(a==='delb'){if(!GS.w){GS.w=1;b.textContent='Yakin hapus?';return}S.bahan=S.bahan.filter(x=>x.id!==GS.id);S.mov=S.mov.filter(x=>x.b!==GS.id);save();$('#sh2').classList.remove('on');render()}
   else if(a==='copyb'){msg=(await cp(btext()))?'Rekap tersalin':'Gagal menyalin';render()}
@@ -409,8 +446,12 @@ document.addEventListener('click',async e=>{
   else if(a==='later'){S.backupAt=Date.now();save();render()}
   else if(a==='restore'){try{const d=JSON.parse($('#rs').value);if(!valid(d))throw 0;if(!confirm('Timpa semua data dengan cadangan ini?'))return;S=d;norm();save();msg='Data dipulihkan'}catch(x){msg='Teks cadangan tidak valid'}render()}
   else if(a==='reset'){if(confirm('Hapus semua data? Data di server ikut terhapus.')){S={outlets:[{name:'SJ TSM',items:[]}],pay:[],bahan:[],mov:[],rek:[]};save();render()}}
-  else if(a==='close')closeP(+b.dataset.o);
+  else if(a==='tutup')closeP(+b.dataset.o);
+  else if(a==='copyc'){const c=CL().find(x=>x.p.id===b.dataset.id);msg=c&&(await cp(ctext(c)))?'Rekap tersalin':'Gagal menyalin';render()}
+  else if(a==='copyall'){msg=(await cp(CL().map(ctext).join('\n----------\n')))?'Semua rekap tersalin':'Gagal menyalin';render()}
+  else if(a==='reopen'){const r=(S.rek||[]).find(x=>x.id===b.dataset.id);if(!r)return;if(!confirm('Buka lagi tagihan ini? Titipan dan pembayarannya digabung kembali ke tagihan berjalan outlet tersebut.'))return;S.outlets[r.o].items.forEach(i=>{if(i.c===r.id)delete i.c});S.pay.forEach(x=>{if(x.c===r.id)delete x.c});S.rek=S.rek.filter(x=>x.id!==r.id);save();msg='Tagihan dibuka lagi';render()}
   else if(a==='copyrek'){const r=(S.rek||[]).find(x=>x.id===b.dataset.id);msg=r&&(await cp(rtext(r)))?'Rekap tersalin':'Gagal menyalin';render()}
+  else if(a==='pedit'){const x=S.pay.find(y=>y.id===b.dataset.id);if(x)openP(x.o,false,x.id)}
   else if(a==='addpay')openP(+b.dataset.o||0,b.dataset.f==='1');
   else if(a==='pdel'){if(!confirm('Hapus pembayaran ini? Sisa tagihan akan bertambah lagi.'))return;S.pay=S.pay.filter(x=>x.id!==b.dataset.id);save();msg='Pembayaran dihapus';render()}
   else if(a==='pin'){const v=$('#pin').value;if(!v)return;PIN=v;LS.s('rr77pin',v);boot()}
