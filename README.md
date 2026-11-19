@@ -56,5 +56,6 @@ Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan
 - Font memakai Google Fonts. Tanpa internet, tampilan memakai font cadangan.
 
 ## Versi
+- **1.2.0** (20 Nov 2026): ikon menu 3D berwarna (menu bawah, judul halaman, aksi cepat); tombol + Titipan di header dihapus; logo dan nama usaha di layar PIN sama dengan dashboard (disalin di perangkat); ikon aplikasi (layar utama) disamakan dengan logo daun.
 - **1.1.0** (20 Nov 2026): ikon tambah pada tombol Titipan dan Bahan, ikon hapus (tempat sampah) untuk titipan, pembayaran, riwayat bahan, bahan, dan outlet; hapus outlet; nomor versi di Lainnya dan layar PIN; latar logo transparan (putih tepi dibuang saat unggah); ikon masuk dan keluar.
 - Nomor versi ada di `APP_V` dalam `index.html`; naikkan setiap kali ada perubahan.

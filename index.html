@@ -133,13 +133,21 @@ svg.ch{width:100%;height:auto;stroke:none;display:block}
 .x svg{width:19px;height:19px}.x[aria-label^="Hapus"]{color:#dc2626}.btn svg{width:18px;height:18px}
 .out2{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.18);color:#fff;box-shadow:none;border:1px solid rgba(255,255,255,.3)}.out2[hidden]{display:none}
 .c .logo:not(.has){background:var(--acc)}.ver{text-align:center;color:var(--mu);font-size:.78rem;margin:20px 0 0}
+.i3{position:relative;width:34px;height:34px;border-radius:12px;display:grid;place-items:center;flex:none;color:#fff;background:linear-gradient(165deg,rgba(255,255,255,.38),rgba(255,255,255,0) 48%,rgba(0,0,0,.28)),var(--k);box-shadow:inset 0 1.5px 1px rgba(255,255,255,.65),inset 0 -3px 4px rgba(0,0,0,.2),0 4px 0 rgba(0,0,0,.3),0 9px 12px -4px rgba(0,0,0,.4);transition:transform .15s}
+.i3::before{content:"";position:absolute;left:3px;right:3px;top:2px;height:42%;border-radius:10px 10px 50% 50%/10px 10px 40% 40%;background:linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));pointer-events:none}
+.i3 svg,nav button .i3 svg,.qa button .i3 svg{width:19px;height:19px;padding:0;background:none;border-radius:0;color:#fff;stroke-width:2.3;filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.35));position:relative}
+.i3.lg{width:52px;height:52px;border-radius:18px}.i3.lg svg{width:28px;height:28px}
+nav button{padding-top:6px;padding-bottom:7px}nav button .i3{margin-bottom:5px}nav button.on .i3{transform:translateY(-3px)}
+.qa .i3{width:46px;height:46px;border-radius:16px;margin-bottom:5px}.qa button .i3 svg{width:25px;height:25px}
+.lk .lg.has{background:none;box-shadow:none}.lk .lg img{width:100%;height:100%;object-fit:contain}
+main{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}
+nav:empty{display:none}
 </style>
 </head>
 <body>
 <header>
 <div class="logo" id="lgo"><svg viewBox="0 0 24 24"><path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15M5 19c3-5 6-8 10-10"/></svg></div>
 <div class="t"><b id="hn">Titipan RR77</b><small id="hd"></small><small id="st" style="display:block;margin-top:1px;text-transform:none;letter-spacing:.02em"></small></div>
-<button class="fab" data-a="add" aria-label="Tambah"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <button class="fab out2" id="lo" data-a="logout" aria-label="Keluar" hidden><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button>
 </header>
 <main id="app"></main>
@@ -184,6 +192,8 @@ logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/
 const PAL=['#0F9D6B','#F59E0B','#2D8CFF','#7C4DFF','#F43F8E','#14B8A6'];
 const av=(oi,n)=>`<i class="av" style="--k:${PAL[oi%PAL.length]}">${esc(((short(n)||'?')[0]||'?').toUpperCase())}</i>`;
 const ic=n=>`<svg viewBox="0 0 24 24">${I[n]}</svg>`;
+const TC={home:'#0F9D6B',out:'#F59E0B',pay:'#2D8CFF',bhn:'#7C4DFF',rep:'#F43F8E',more:'#14B8A6'};
+const ic3=(n,c,z)=>`<i class="i3${z?' '+z:''}" style="--k:${c}">${ic(n)}</i>`;
 const DY=['Minggu','Senin','Selasa','Rabu','Kamis','Jum’at','Sabtu'];
 const MS=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 const ML=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -221,8 +231,10 @@ async function push(){
     if(dirty)push();else{LS.d('rr77dirty');setStat('Tersimpan di server')}
   }catch(e){dirty=true;busy=false;setStat('Belum tersimpan. Akan dicoba lagi')}
 }
-function lock(m){S=null;$('#lo').hidden=true;$('#nav').innerHTML='';$('#app').innerHTML=`<div class="lk"><i class="lg">${ic('leaf')}</i><h1>Titipan RR77</h1><p class="sub">Masukkan PIN untuk membuka data</p><p class="ver">Versi ${APP_V}</p></div><div class="c"><label>PIN</label><input type="password" id="pin" autocomplete="current-password" autocapitalize="none">${m?`<p class="m" style="color:#dc2626">${esc(m)}</p>`:''}<button class="btn p" data-a="pin" style="margin-top:14px">${ic('login')}Masuk</button></div>`}
-function fail(m){S=null;$('#lo').hidden=true;$('#nav').innerHTML='';$('#app').innerHTML=`<div class="lk"><i class="lg">${ic('leaf')}</i><h1>Tidak bisa memuat</h1><p class="sub">${esc(m)}</p></div><button class="btn p" data-a="retry">Coba lagi</button>`}
+function hdr(){const l=LS.g('rr77logo');$('#lgo').className='logo'+(l?' has':'');$('#lgo').innerHTML=l?`<img src="${l}" alt="Logo">`:ic('leaf');$('#hn').textContent=LS.g('rr77nama')||'Titipan RR77'}
+function brand(){const l=LS.g('rr77logo');return l?`<i class="lg has"><img src="${l}" alt="Logo"></i>`:`<i class="lg">${ic('leaf')}</i>`}
+function lock(m){S=null;$('#lo').hidden=true;hdr();$('#nav').innerHTML='';$('#app').innerHTML=`<div class="lk">${brand()}<h1>${esc(LS.g('rr77nama')||'Titipan RR77')}</h1><p class="sub">Masukkan PIN untuk membuka data</p><p class="ver">Versi ${APP_V}</p></div><div class="c"><label>PIN</label><input type="password" id="pin" autocomplete="current-password" autocapitalize="none">${m?`<p class="m" style="color:#dc2626">${esc(m)}</p>`:''}<button class="btn p" data-a="pin" style="margin-top:14px">${ic('login')}Masuk</button></div>`}
+function fail(m){S=null;$('#lo').hidden=true;hdr();$('#nav').innerHTML='';$('#app').innerHTML=`<div class="lk">${brand()}<h1>Tidak bisa memuat</h1><p class="sub">${esc(m)}</p></div><button class="btn p" data-a="retry">Coba lagi</button>`}
 async function boot(){
   if(!PIN){lock();return}
   $('#nav').innerHTML='';$('#app').innerHTML='<p class="sub">Memuat data…</p>';
@@ -243,7 +255,7 @@ async function boot(){
     S=L;REV=lr;dirty=ld;norm();render();setStat('Offline: memakai salinan di perangkat ini')
   }else fail((res&&res.j&&res.j.error)||'Tidak bisa terhubung ke server. Periksa internet.');
 }
-const APP_V='1.1.0',APP_D='20 Nov 2026';
+const APP_V='1.2.0',APP_D='20 Nov 2026';
 let tab='home',pre=0,msg='',per='bln';
 const act=o=>o.items.filter(i=>!i.c);
 const tot=o=>act(o).reduce((s,i)=>s+i.qty*i.price,0);
@@ -266,7 +278,7 @@ function home(){
     ${S.backupAt?'':`<div class="ban">${ic('shield')}<div><p><b>Waktunya mencadangkan data.</b> Belum pernah dicadangkan. Salin cadangan lalu simpan ke WhatsApp pribadi atau catatan.</p><div class="r"><button class="btn p s" data-a="backup">Cadangkan sekarang</button><a data-a="later">Nanti</a></div></div></div>`}
   ${msg?`<div class="ban" style="background:var(--pri2);color:var(--pri)"><b>${msg}</b></div>`:''}
   <div class="hero"><small>${ic('receipt')}Tagihan berjalan dari titipan belum lunas</small><div class="hv">Rp ${rp(OW)}</div><div class="hd2"><span>${UNI.length} titipan</span><span>${UNI.reduce((x,i)=>x+i.qty,0)} porsi</span><span>${UN} outlet</span></div></div>
-  <div class="qa"><button class="k-amber" data-a="add">${ic('plus')}Titipan</button><button class="k-sky" data-a="addpay">${ic('wallet')}Bayar</button><button class="k-grape" data-a="bin">${ic('cart')}Belanja</button><button class="k-rose" data-a="copyrep">${ic('copy')}Salin tagihan</button></div>
+  <div class="qa"><button class="k-amber" data-a="add">${ic3('plus','#F59E0B')}Titipan</button><button class="k-sky" data-a="addpay">${ic3('wallet','#2D8CFF')}Bayar</button><button class="k-grape" data-a="bin">${ic3('cart','#7C4DFF')}Belanja</button><button class="k-rose" data-a="copyrep">${ic3('copy','#F43F8E')}Salin tagihan</button></div>
   <div class="grid">
   ${card('box','Hari ini',tdI.reduce((s,i)=>s+i.qty,0)+' porsi','Rp '+rp(tdI.reduce((s,i)=>s+i.qty*i.price,0)))}
   ${card('trend','Rata-rata/hari','Rp '+rp(days?t/days:0),'bulan '+ML[now.getMonth()])}
@@ -457,10 +469,11 @@ function render(){
   const now=new Date();$('#lo').hidden=false;$('#st').textContent=stat;$('#hd').textContent=`${DY[now.getDay()]}, ${now.getDate()} ${ML[now.getMonth()]} ${now.getFullYear()}`;
   $('#hn').textContent=S.nama||'RR77';document.title=S.nama||'RR77';
   $('#lgo').className='logo'+(S.logo?' has':'');$('#lgo').innerHTML=S.logo?`<img src="${S.logo}" alt="Logo">`:ic('leaf');
+  if(S.logo)LS.s('rr77logo',S.logo);else LS.d('rr77logo');LS.s('rr77nama',S.nama||'RR77');
   document.body.dataset.tab=tab;
   const ico=(NAV.find(n=>n[0]===tab)||[])[1]||'home';
-  $('#app').innerHTML=V[tab]().replace(/<h1>(.*?)<\/h1><p class="sub">(.*?)<\/p>/,(m,t,u)=>`<div class="ph"><i class="pi">${ic(ico)}</i><div><h1>${t}</h1><p class="sub">${u}</p></div></div>`);
-  $('#nav').innerHTML=NAV.map(([k,i,l])=>`<button class="${tab===k?'on':''}" data-t="${k}">${ic(i)}${l}${k==='more'&&!S.backupAt?'<span class="dot"></span>':''}</button>`).join('');
+  $('#app').innerHTML=V[tab]().replace(/<h1>(.*?)<\/h1><p class="sub">(.*?)<\/p>/,(m,t,u)=>`<div class="ph">${ic3(ico,TC[tab],'lg')}<div><h1>${t}</h1><p class="sub">${u}</p></div></div>`);
+  $('#nav').innerHTML=NAV.map(([k,i,l])=>`<button class="${tab===k?'on':''}" data-t="${k}">${ic3(i,TC[k])}${l}${k==='more'&&!S.backupAt?'<span class="dot"></span>':''}</button>`).join('');
 }
 async function cp(t){try{await navigator.clipboard.writeText(t);return 1}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=0;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}}
 let ED=null,LASTP={p:'Nasi bakar',h:10000};
