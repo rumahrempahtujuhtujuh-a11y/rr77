@@ -1,29 +1,38 @@
 # Titipan RR77
 
 Aplikasi web sederhana untuk laporan titipan harian, analisa produk, dan stok bahan baku.
-Satu file utama (`index.html`), tanpa build dan tanpa dependensi.
+Satu file tampilan (`index.html`) dan satu fungsi server (`api/data.js`), tanpa build dan tanpa dependensi npm.
 
 ## Isi folder
-- `index.html` : seluruh aplikasi (tampilan, logika, dan data awal)
+- `index.html` : seluruh tampilan dan logika aplikasi
+- `api/data.js` : penyimpanan data di server (Upstash Redis) dengan PIN
+- `api/_seed.js` : data awal, hanya dibaca server
 - `manifest.webmanifest`, `icon.svg`, `icon-192.png`, `icon-512.png` : agar bisa dipasang di layar utama HP
 - `vercel.json` : pengaturan Vercel (header keamanan, tidak diindeks mesin pencari)
 - `robots.txt` : meminta mesin pencari tidak mengindeks
 
 ## Deploy ke GitHub dan Vercel
-1. Buat repository baru di GitHub. **Pilih Private**, karena `index.html` berisi data penjualan.
-2. Unggah semua file di folder ini ke repository (tombol *Add file > Upload files*).
-3. Buka vercel.com, pilih *Add New > Project*, lalu impor repository tadi.
-4. Framework Preset: **Other**. Biarkan Build Command dan Output Directory kosong, lalu tekan *Deploy*.
-5. Setelah selesai, buka alamat `.vercel.app` di HP dan pilih *Tambahkan ke layar utama*.
+1. Buat repository baru di GitHub (Private) dan unggah semua file, termasuk folder `api/`.
+2. Di vercel.com pilih *Add New > Project*, impor repository. Framework Preset: **Other**. Build Command dan Output Directory kosongkan, lalu *Deploy*.
+3. **Hubungkan database.** Di project Vercel buka tab *Storage > Create Database*, pilih **Upstash Redis** (paket gratis cukup), lalu *Connect* ke project ini. Vercel otomatis mengisi variabel `KV_REST_API_URL` dan `KV_REST_API_TOKEN` (atau `UPSTASH_REDIS_REST_URL` dan `UPSTASH_REDIS_REST_TOKEN`; keduanya didukung).
+4. **Buat PIN.** Di *Settings > Environment Variables* tambahkan `APP_PIN` dengan nilai PIN/kata sandi pilihan Anda (disarankan minimal 8 karakter). Hanya yang tahu PIN yang bisa membaca atau mengubah data.
+5. **Redeploy** (tab *Deployments* > titik tiga > *Redeploy*) agar variabel terbaca.
+6. Buka alamat `.vercel.app`, masukkan PIN. Data lama yang ada di browser HP otomatis dipindahkan ke server pada saat pertama masuk. Lalu pilih *Tambahkan ke layar utama*.
 
-Setiap perubahan yang di-commit ke GitHub akan otomatis ter-deploy ulang.
+## Penyimpanan data
+- Data utama ada di server (Upstash Redis lewat `api/data.js`), jadi sama di semua perangkat. Browser hanya menyimpan salinan agar cepat dan tetap terbuka saat sinyal buruk.
+- Perubahan saat offline tersimpan di perangkat dan dikirim otomatis begitu online.
+- Setiap data punya nomor revisi. Bila dua perangkat mengubah data bersamaan, yang kalah dimuat ulang dari server dan salinannya disimpan di menu **Lainnya > Data yang tertimpa**.
+- Titik pulih harian: server menyimpan keadaan data sebelum perubahan pertama tiap hari, selama 30 hari (kunci `rr77:bak:TANGGAL`, bisa dibaca di konsol Upstash).
+- Data awal (laporan Mei sampai November 2026) ada di `api/_seed.js`, bukan lagi di `index.html`, sehingga tidak terbaca publik. Ia hanya dipakai bila server masih kosong dan belum ada data di browser.
+- Cadangan manual lewat **Lainnya > Salin cadangan** tetap tersedia.
 
-## Data
-- Data tersimpan di browser (localStorage, kunci `rr77v2`) pada perangkat yang dipakai, bukan di server.
-- Data awal (laporan Mei sampai November 2026) tertanam di `index.html` pada fungsi `sample()`. Ia hanya tampil saat browser belum punya data.
-- Cadangkan rutin lewat menu **Lainnya > Salin cadangan**, dan pulihkan lewat **Pulihkan data**.
-- Ganti perangkat atau hapus data browser: tempel teks cadangan di menu Lainnya.
+## Menu Bayar
+- Catat pembayaran dari tiap outlet (tanggal, jumlah, cara bayar, catatan). Tombol *Lunasi* mengisi jumlah sisa tagihan.
+- **Sisa tagihan = total titipan outlet dikurangi total pembayaran**, dihitung otomatis. Menghapus pembayaran mengembalikan sisa tagihan.
+- Pembayaran dialokasikan ke titipan paling lama lebih dulu, sehingga tiap titipan di tab Outlet berlabel *Lunas*, *Sebagian*, atau *Belum*.
+- Beranda menampilkan *Belum dibayar* dan *Sudah diterima*. Laporan WhatsApp menambahkan baris *Sudah dibayar* dan *Sisa* bila sudah ada pembayaran.
 
 ## Catatan
-- Siapa pun yang tahu alamat web dapat membuka halaman dan melihat data awal yang tertanam. Untuk data sensitif, kosongkan isi `sample()` (sisakan `{"outlets":[{"name":"SJ TSM","items":[]}]}`) sebelum dipublikasikan, lalu pulihkan data lewat cadangan.
+- Keamanan: semua data lewat `/api/data` dengan PIN. Setelah 10 kali salah PIN, alamat IP itu dikunci 10 menit.
 - Font memakai Google Fonts. Tanpa internet, tampilan memakai font cadangan.
