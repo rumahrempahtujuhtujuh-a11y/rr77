@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<title>Titipan RR77</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f2e8;--cd:#fffdf8;--tx:#1d1810;--mu:#7d7463;--pri:#9a7420;--pri2:rgba(154,116,32,.12);--g1:#ecc968;--g2:#b8892b;--on:#1a1405;--bd:rgba(154,116,32,.24);--hd:rgba(247,242,232,.88);--gr:#4d7c0f;--wn:rgba(154,116,32,.12);--wt:#7a5a14;--shd:0 10px 28px rgba(90,64,10,.12);--hero:linear-gradient(135deg,#1f1a0e,#34290f);color-scheme:light;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a0b;--cd:#141416;--tx:#f4eee0;--mu:#9b9482;--pri:#e0bb5c;--pri2:rgba(224,187,92,.12);--bd:rgba(224,187,92,.2);--hd:rgba(10,10,11,.86);--gr:#a3d977;--wn:rgba(224,187,92,.1);--wt:#e8cf8a;--shd:0 10px 30px rgba(0,0,0,.55);--hero:linear-gradient(135deg,#221c0e,#0e0c07);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0a0b;--cd:#141416;--tx:#f4eee0;--mu:#9b9482;--pri:#e0bb5c;--pri2:rgba(224,187,92,.12);--bd:rgba(224,187,92,.2);--hd:rgba(10,10,11,.86);--gr:#a3d977;--wn:rgba(224,187,92,.1);--wt:#e8cf8a;--shd:0 10px 30px rgba(0,0,0,.55);--hero:linear-gradient(135deg,#221c0e,#0e0c07);color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.serif,h1,.sec,.c .v,.hv,header b,h2{font-family:"Playfair Display",Georgia,"Times New Roman",serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:10}
+header{position:sticky;top:0;z-index:5;background:var(--hd);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);padding:calc(env(safe-area-inset-top,0px) + 12px) 18px 12px;display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on);display:grid;place-items:center;flex:none;box-shadow:0 4px 14px rgba(184,137,43,.4)}
+.logo svg{width:24px;height:24px}
+header div.t{flex:1;min-width:0}
+header b{font-size:1.2rem;display:block;letter-spacing:.04em}
+header small{color:var(--mu);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.fab{width:46px;height:46px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(184,137,43,.4)}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+main{max-width:640px;margin:0 auto;padding:20px 18px 120px}
+h1{font-size:1.9rem;margin:4px 0 2px;font-weight:700;letter-spacing:.01em}
+.sub{color:var(--mu);margin:0 0 18px;font-size:.9rem;letter-spacing:.04em}
+.acts{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 18px;border-radius:99px;border:1px solid var(--bd);background:var(--cd);color:var(--tx);font:inherit;font-weight:600;font-size:.92rem;letter-spacing:.02em;cursor:pointer}
+.btn.p{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:var(--on);box-shadow:0 6px 18px rgba(184,137,43,.35)}
+.btn.s{padding:9px 15px;font-size:.85rem}
+.hero{background:var(--hero);color:#f4eee0;border:1px solid rgba(224,187,92,.45);border-radius:24px;padding:22px 20px;margin-bottom:14px;box-shadow:var(--shd);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-50px;top:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(236,201,104,.28),transparent 70%)}
+.hero small{color:#e0bb5c;letter-spacing:.2em;font-size:.68rem;font-weight:600}
+.hv{font-size:2.3rem;font-weight:700;margin:8px 0 12px;background:linear-gradient(135deg,#f6dd92,#d9a93b);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+.hd2{display:flex;gap:8px;flex-wrap:wrap}
+.hd2 span{border:1px solid rgba(224,187,92,.35);border-radius:99px;padding:3px 12px;font-size:.78rem;color:#e8d9b0}
+.ban{display:flex;gap:12px;background:var(--wn);color:var(--wt);border:1px solid var(--bd);border-radius:18px;padding:14px;margin-bottom:14px}
+.ban svg{flex:none;margin-top:2px}
+.ban p{margin:0 0 10px;font-size:.92rem}
+.ban .r{display:flex;gap:14px;align-items:center}
+.ban a{color:var(--pri);font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.c{background:var(--cd);border-radius:20px;padding:15px;box-shadow:var(--shd);border:1px solid var(--bd)}
+.c .l{display:flex;align-items:center;gap:8px;color:var(--mu);font-weight:600;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.c .l svg{width:18px;height:18px;color:var(--pri)}
+.c .v{font-size:1.5rem;font-weight:700;margin:8px 0 2px;line-height:1.15}
+.c .v.g{color:var(--gr)}
+.c .d{color:var(--mu);font-size:.82rem}
+.sec{font-weight:700;font-size:1.2rem;margin:22px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.sec::after{content:"";flex:1;height:1px;margin-left:14px;background:linear-gradient(90deg,var(--bd),transparent)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.row:last-child{border:0}
+.row .m{color:var(--mu);font-size:.82rem}
+.tag{background:var(--pri2);color:var(--pri);border:1px solid var(--bd);border-radius:99px;padding:1px 10px;font-size:.72rem;font-weight:700;letter-spacing:.06em}
+.x{background:none;border:0;color:var(--mu);font-size:1.3rem;padding:2px 8px;cursor:pointer}
+nav{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:6;max-width:612px;margin:0 auto;background:var(--hd);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--bd);border-radius:26px;box-shadow:var(--shd);display:flex;padding:6px}
+nav button{flex:1;background:none;border:0;color:var(--mu);font:inherit;font-size:.72rem;font-weight:600;letter-spacing:.05em;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;border-radius:20px;cursor:pointer;position:relative}
+nav button.on{color:var(--pri);background:var(--pri2)}
+.dot{position:absolute;top:6px;right:28%;width:9px;height:9px;border-radius:50%;background:var(--g1);box-shadow:0 0 0 2px var(--cd)}
+label{display:block;font-size:.72rem;color:var(--mu);margin:12px 0 5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+input,select,textarea{width:100%;padding:13px;border:1px solid var(--bd);border-radius:14px;background:var(--bg);color:var(--tx);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);outline-offset:1px}
+textarea{height:300px;font:.85rem/1.5 ui-monospace,monospace}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sh{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.sh.on{display:flex}
+.sh>div{background:var(--cd);border:1px solid var(--bd);width:100%;max-width:640px;border-radius:28px 28px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 18px);max-height:92%;overflow:auto}
+.sh h2{margin:0 0 4px;font-size:1.4rem}
+.chips{display:flex;gap:8px;margin-bottom:14px}
+.chip{padding:8px 16px;border-radius:99px;border:1px solid var(--bd);background:var(--cd);color:var(--mu);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+.chip.on{background:linear-gradient(135deg,var(--g1),var(--g2));color:var(--on);border-color:transparent}
+.hb{margin:10px 0}
+.hl{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;margin-bottom:4px}
+.tr{height:9px;border-radius:9px;background:var(--pri2);overflow:hidden}
+.tr i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--g2),var(--g1))}
+svg.ch{width:100%;height:auto;stroke:none;display:block}
+.ch text{fill:var(--mu);font-size:9px;font-family:inherit}
+.ch .vt{fill:var(--tx);font-weight:700}
+.ch .vb{fill:var(--pri)}
+.ch .al{stroke:var(--tx);stroke-width:1;stroke-dasharray:3 3;opacity:.45}
+.ms{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:10px 0}
+.ms div{font-size:.78rem;color:var(--mu)}
+.ms b{display:block;color:var(--tx);font-size:1rem}
+.ev{padding:9px 0;border-bottom:1px solid var(--bd);font-size:.92rem}
+.ev:last-child{border:0}
+.ev span{color:var(--mu);display:block;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase}
+.logo.has{background:var(--cd);border:1px solid var(--bd);box-shadow:none;overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:contain}
+.tag.w{background:var(--wn);color:var(--wt)}.tag.d{background:rgba(220,38,38,.12);color:#dc2626}
+.c .v.r{color:#dc2626}
+nav button{font-size:.66rem;letter-spacing:0}
+</style>
+</head>
+<body>
+<header>
+<div class="logo" id="lgo"><svg viewBox="0 0 24 24"><path d="M4 9l1-5h14l1 5M4 9v11h16V9M4 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 6 0 2.5 2.5 0 0 0 5 0M9 20v-6h6v6"/></svg></div>
+<div class="t"><b id="hn">Titipan RR77</b><small id="hd"></small></div>
+<button class="fab" data-a="add" aria-label="Tambah"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+</header>
+<main id="app"></main>
+<nav id="nav"></nav>
+
+<div class="sh" id="sh"><div>
+<h2>Tambah titipan</h2>
+<label>Outlet</label><select id="fo"></select>
+<div class="two">
+<div><label>Tanggal</label><input type="date" id="fd"></div>
+<div><label>Jumlah</label><input type="number" id="fq" min="1" inputmode="numeric" placeholder="12"></div>
+<div><label>Produk</label><input id="fp" value="Nasi bakar"></div>
+<div><label>Harga satuan (Rp)</label><input type="number" id="fh" value="10000" inputmode="numeric"></div>
+</div>
+<div class="acts" style="margin:16px 0 0"><button class="btn p" data-a="save" style="flex:1;justify-content:center">Simpan</button><button class="btn" data-a="close">Batal</button></div>
+</div></div>
+
+<div class="sh" id="sh2"><div id="sh2b"></div></div>
+<script>
+const I={
+home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+store:'<path d="M4 9l1-5h14l1 5M4 9v11h16V9M4 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 6 0 2.5 2.5 0 0 0 5 0M9 20v-6h6v6"/>',
+doc:'<path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/>',
+menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+cash:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/>',
+cal:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>',
+list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24">${I[n]}</svg>`;
+const DY=['Minggu','Senin','Selasa','Rabu','Kamis','Jum’at','Sabtu'];
+const MS=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const ML=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const rp=n=>Math.round(n).toLocaleString('id-ID');
+const pad=n=>String(n).padStart(2,'0');
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const fd=s=>{const d=pd(s);return `${DY[d.getDay()]} ${d.getDate()} ${MS[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`};
+const short=n=>n.trim().split(/\s+/).pop();
+const sample=()=>({"outlets":[{"name":"SJ TSM","items":[{"date":"2026-05-30","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-05-30","qty":5,"prod":"Nasi kepal","price":6000},{"date":"2026-06-01","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-06-01","qty":7,"prod":"Nasi kepal","price":6000},{"date":"2026-06-04","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-06-08","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-06-10","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-06-13","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-06-15","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-06-17","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-06-18","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-06-20","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-06-22","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-06-23","qty":5,"prod":"Nasi bakar","price":10000},{"date":"2026-06-26","qty":7,"prod":"Nasi bakar","price":10000},{"date":"2026-06-27","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-06-29","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-07-02","qty":6,"prod":"Nasi bakar","price":10000},{"date":"2026-07-03","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-07-04","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-07-06","qty":7,"prod":"Nasi bakar","price":10000},{"date":"2026-07-09","qty":7,"prod":"Nasi bakar","price":10000},{"date":"2026-07-10","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-07-11","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-07-13","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-07-14","qty":5,"prod":"Nasi bakar","price":10000},{"date":"2026-07-17","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-07-18","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-07-19","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-07-20","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-07-23","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-07-24","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-07-25","qty":4,"prod":"Nasi bakar","price":10000},{"date":"2026-07-26","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-07-28","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-07-29","qty":7,"prod":"Nasi bakar","price":10000},{"date":"2026-07-31","qty":4,"prod":"Nasi bakar","price":10000},{"date":"2026-08-01","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-08-02","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-08-03","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-08-04","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-08-06","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-08-07","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-08-08","qty":15,"prod":"Nasi bakar","price":10000},{"date":"2026-08-09","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-08-10","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-08-11","qty":6,"prod":"Nasi bakar","price":10000},{"date":"2026-08-13","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-08-14","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-08-15","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-08-16","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-08-17","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-08-20","qty":7,"prod":"Nasi bakar","price":10000},{"date":"2026-08-21","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-08-22","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-08-23","qty":14,"prod":"Nasi bakar","price":10000},{"date":"2026-08-24","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-08-25","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-08-27","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-08-28","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-08-29","qty":15,"prod":"Nasi bakar","price":10000},{"date":"2026-08-30","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-09-01","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-09-03","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-09-04","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-09-05","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-09-07","qty":3,"prod":"Nasi bakar","price":10000},{"date":"2026-09-11","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-09-12","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-09-13","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-09-14","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-09-17","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-09-18","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-09-19","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-09-20","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-09-21","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-09-24","qty":7,"prod":"Nasi bakar","price":10000},{"date":"2026-09-25","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-09-26","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-09-27","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-09-28","qty":4,"prod":"Nasi bakar","price":10000},{"date":"2026-10-02","qty":6,"prod":"Nasi bakar","price":10000},{"date":"2026-10-03","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-10-04","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-10-08","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-10-09","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-10-10","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-10-11","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-10-13","qty":9,"prod":"Nasi bakar","price":10000},{"date":"2026-10-15","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-10-16","qty":8,"prod":"Nasi bakar","price":10000},{"date":"2026-10-17","qty":15,"prod":"Nasi bakar","price":10000},{"date":"2026-10-18","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-10-21","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-10-22","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-10-23","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-10-24","qty":17,"prod":"Nasi bakar","price":10000},{"date":"2026-10-25","qty":15,"prod":"Nasi bakar","price":10000},{"date":"2026-10-27","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-10-28","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-10-30","qty":14,"prod":"Nasi bakar","price":10000},{"date":"2026-10-31","qty":14,"prod":"Nasi bakar","price":10000},{"date":"2026-11-01","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-11-02","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-11-04","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-11-05","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-11-06","qty":10,"prod":"Nasi bakar","price":10000},{"date":"2026-11-07","qty":11,"prod":"Nasi bakar","price":10000},{"date":"2026-11-08","qty":15,"prod":"Nasi bakar","price":10000},{"date":"2026-11-10","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-11-11","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-11-12","qty":13,"prod":"Nasi bakar","price":10000},{"date":"2026-11-13","qty":15,"prod":"Nasi bakar","price":10000},{"date":"2026-11-14","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-11-15","qty":16,"prod":"Nasi bakar","price":10000},{"date":"2026-11-16","qty":12,"prod":"Nasi bakar","price":10000},{"date":"2026-11-17","qty":10,"prod":"Nasi bakar","price":10000}]},{"name":"SJ Mall Nipah","items":[{"date":"2026-06-09","qty":6,"prod":"Nasi bakar","price":10000},{"date":"2026-06-10","qty":5,"prod":"Nasi bakar","price":10000},{"date":"2026-06-10","qty":2,"prod":"Nasi gigit","price":6000},{"date":"2026-06-15","qty":2,"prod":"Nasi bakar","price":10000}]},{"name":"SJ Pettarani","items":[{"date":"2026-06-15","qty":2,"prod":"Nasi bakar","price":10000}]}]});
+let S=null;
+try{S=JSON.parse(localStorage.getItem('rr77v2')||'null')}catch(e){}
+if(!S||!S.outlets)S=sample();
+const save=()=>{try{localStorage.setItem('rr77v2',JSON.stringify(S))}catch(e){}};
+let tab='home',pre=0,msg='',per='bln';
+const tot=o=>o.items.reduce((s,i)=>s+i.qty*i.price,0);
+const sorted=o=>[...o.items].sort((a,b)=>a.date.localeCompare(b.date));
+const NAV=[['home','home','Beranda'],['out','store','Outlet'],['ana','trend','Analisa'],['bhn','box','Bahan'],['rep','doc','Laporan'],['more','menu','Lainnya']];
+
+function home(){
+  const now=new Date(),ym=iso(now).slice(0,7),td=iso(now),h=now.getHours();
+  const hi=h<11?'pagi':h<15?'siang':h<18?'sore':'malam';
+  const all=[];S.outlets.forEach((o,oi)=>o.items.forEach((i,ix)=>all.push({...i,o:o.name,oi,ix})));
+  const mon=all.filter(i=>i.date.startsWith(ym)),t=mon.reduce((s,i)=>s+i.qty*i.price,0),por=mon.reduce((s,i)=>s+i.qty,0);
+  const days=new Set(mon.map(i=>i.date)).size,tdI=all.filter(i=>i.date===td);
+  const mx=all.reduce((a,i)=>!a||i.qty>a.qty?i:a,null);
+  const rec=[...all].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const card=(n,l,v,d,g)=>`<div class="c"><div class="l">${ic(n)}${l}</div><div class="v ${g?'g':''}">${v}</div><div class="d">${d}</div></div>`;
+  return `<h1>Selamat ${hi}</h1><p class="sub">${DY[now.getDay()]}, ${now.getDate()} ${ML[now.getMonth()]} ${now.getFullYear()}</p>
+  <div class="acts"><button class="btn p" data-a="add">${ic('plus')}Tambah titipan</button><button class="btn" data-a="copyrep">${ic('copy')}Salin laporan</button></div>
+  ${S.backupAt?'':`<div class="ban">${ic('shield')}<div><p><b>Waktunya mencadangkan data.</b> Belum pernah dicadangkan. Salin cadangan lalu simpan ke WhatsApp pribadi atau catatan.</p><div class="r"><button class="btn p s" data-a="backup">Cadangkan sekarang</button><a data-a="later">Nanti</a></div></div></div>`}
+  ${msg?`<div class="ban" style="background:var(--pri2);color:var(--pri)"><b>${msg}</b></div>`:''}
+  <div class="hero"><small>TOTAL TITIPAN · ${ML[now.getMonth()].toUpperCase()}</small><div class="hv">Rp ${rp(t)}</div><div class="hd2"><span>${por} porsi</span><span>${days} hari</span><span>${S.outlets.length} outlet</span></div></div>
+  <div class="grid">
+  ${card('box','Hari ini',tdI.reduce((s,i)=>s+i.qty,0)+' porsi','Rp '+rp(tdI.reduce((s,i)=>s+i.qty*i.price,0)))}
+  ${card('trend','Rata-rata/hari','Rp '+rp(days?t/days:0),'bulan '+ML[now.getMonth()])}
+  ${card('store','Outlet aktif',S.outlets.length,S.outlets.map(o=>short(o.name)).join(', ')||'-')}
+  ${card('list','Tertinggi',mx?mx.qty+' porsi':'-',mx?fd(mx.date):'belum ada data')}
+  </div>
+  <div class="sec">Titipan terbaru</div><div class="c">${rec.length?rec.map(i=>`<div class="row"><div><b>${fd(i.date)}</b><div class="m">${i.qty} ${esc(i.prod)}</div></div><div style="text-align:right"><b>Rp ${rp(i.qty*i.price)}</b><div><span class="tag">${esc(short(i.o))}</span></div></div></div>`).join(''):'<div class="m">Belum ada titipan.</div>'}</div>`;
+}
+function out(){
+  return `<h1>Outlet</h1><p class="sub">Daftar titipan per outlet</p><div class="acts"><button class="btn p" data-a="addo">${ic('plus')}Tambah outlet</button></div>`+
+  S.outlets.map((o,oi)=>`<div class="c" style="margin-bottom:12px"><div class="row" style="padding-top:0"><div><b>Outlet ${esc(o.name)}</b><div class="m">${o.items.length} entri</div></div><div style="text-align:right"><b style="color:var(--gr)">Rp ${rp(tot(o))}</b><div><button class="btn s" data-a="add" data-o="${oi}" style="margin-top:4px;padding:6px 10px">+ Titipan</button></div></div></div>`+
+  sorted(o).map(i=>`<div class="row"><div><b>${fd(i.date)}</b><div class="m">${i.qty} ${esc(i.prod)}</div></div><div>Rp ${rp(i.qty*i.price)}<button class="x" data-a="del" data-o="${oi}" data-i="${o.items.indexOf(i)}">×</button></div></div>`).join('')+`</div>`).join('');
+}
+function report(){
+  let t='Bismillah,  list titipan '+(S.nama||'RR77')+' :\n';
+  S.outlets.forEach((o,oi)=>{t+=`\n${String.fromCharCode(65+oi)}. Outlet ${o.name}\n`;sorted(o).forEach((i,n)=>{t+=`${n+1}. ${fd(i.date)} - ${i.qty} ${i.prod} Rp. ${rp(i.qty*i.price)}\n`});t+=`\n*Total ${short(o.name)} : Rp.${rp(tot(o))},-*\n`});
+  if(S.outlets.length>1)t+=`\n*Total semua : Rp.${rp(S.outlets.reduce((s,o)=>s+tot(o),0))},-*\n`;
+  return t;
+}
+function rep(){return `<h1>Laporan</h1><p class="sub">Siap ditempel ke WhatsApp</p><textarea readonly id="rt">${esc(report())}</textarea><div class="acts" style="margin-top:12px"><button class="btn p" data-a="copyrep">${ic('copy')}Salin laporan</button></div>${msg?`<p><b>${msg}</b></p>`:''}`}
+function more(){return `<h1>Lainnya</h1><p class="sub">Profil usaha, cadangan, dan data</p>
+<div class="c" style="margin-bottom:12px"><b>Profil usaha</b><label>Nama usaha</label><input id="nm" value="${esc(S.nama||'RR77')}" maxlength="40"><button class="btn p s" data-a="savenm" style="margin-top:10px">Simpan nama</button><label style="margin-top:18px">Logo</label><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div class="logo ${S.logo?'has':''}" style="width:64px;height:64px">${S.logo?`<img src="${S.logo}" alt="Logo">`:ic('store')}</div><div><label class="btn s" for="lg" style="margin:0;text-transform:none;letter-spacing:0">Pilih logo</label><input type="file" id="lg" accept="image/*" style="display:none">${S.logo?`<button class="btn s" data-a="rmlogo" style="margin-left:8px">Hapus</button>`:''}</div></div></div>
+<div class="c"><b>Cadangkan data</b><p class="m">Salin data ke clipboard, lalu simpan di WhatsApp pribadi atau catatan.${S.backupAt?' Terakhir: '+new Date(S.backupAt).toLocaleDateString('id-ID'):''}</p><button class="btn p s" data-a="backup">${ic('copy')}Salin cadangan</button></div>
+<div class="c" style="margin-top:12px"><b>Pulihkan data</b><p class="m">Tempel teks cadangan di bawah.</p><textarea id="rs" style="height:100px" placeholder="Tempel di sini"></textarea><button class="btn s" data-a="restore" style="margin-top:10px">Pulihkan</button></div>
+<div class="c" style="margin-top:12px"><b>Hapus semua data</b><p class="m">Tidak bisa dibatalkan.</p><button class="btn s" data-a="reset">Hapus semua</button></div>${msg?`<p><b>${msg}</b></p>`:''}`}
+const WL=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const n1=x=>(Math.round(x*10)/10).toString().replace('.',',');
+function hb(rows){const mx=Math.max(...rows.map(r=>r.v),1);return rows.map(r=>`<div class="hb"><div class="hl"><span>${esc(r.l)}</span><b>${r.t}</b></div><div class="tr"><i style="width:${Math.max(r.v/mx*100,2)}%"></i></div></div>`).join('')}
+function vb(d,avg){const W=320,H=150,pb=20,pt=16,n=d.length,mx=Math.max(...d.map(x=>x.v),1),bw=W/n,ph=H-pb-pt;
+ let o=`<svg class="ch" viewBox="0 0 ${W} ${H}">`;
+ d.forEach((x,i)=>{const h=x.v/mx*ph,y=H-pb-h,bx=i*bw+bw*.18;o+=`<rect class="vb" x="${bx}" y="${y}" width="${bw*.64}" height="${Math.max(h,1)}" rx="3"/>`+(n<=10?`<text class="vt" x="${i*bw+bw/2}" y="${y-3}" text-anchor="middle">${n1(x.v)}</text>`:'')+`<text x="${i*bw+bw/2}" y="${H-6}" text-anchor="middle">${x.l}</text>`});
+ if(avg){const y=H-pb-avg/mx*ph;o+=`<line class="al" x1="0" x2="${W}" y1="${y}" y2="${y}"/>`}
+ return o+'</svg>'}
+function ana(){
+  const now=new Date(),ym=iso(now).slice(0,7),lm=new Date(now);lm.setDate(lm.getDate()-6);const l7=iso(lm);
+  const all=[];S.outlets.forEach(o=>o.items.forEach(i=>all.push({...i,o:o.name})));
+  const f=all.filter(i=>per==='bln'?i.date.startsWith(ym):per==='7'?i.date>=l7:true);
+  const head=`<h1>Analisa</h1><p class="sub">Bahan evaluasi produk: jumlah dan harga</p><div class="chips">${[['bln','Bulan ini'],['7','7 hari'],['all','Semua']].map(([k,l])=>`<button class="chip ${per===k?'on':''}" data-a="per" data-p="${k}">${l}</button>`).join('')}</div>`;
+  if(!f.length)return head+'<div class="c"><span class="m">Belum ada data pada periode ini.</span></div>';
+  const P={};f.forEach(i=>{const k=i.prod.trim().toLowerCase(),p=P[k]||(P[k]={n:i.prod.trim(),q:0,r:0,d:new Set(),lo:1e12,hi:0});p.q+=i.qty;p.r+=i.qty*i.price;p.d.add(i.date);p.lo=Math.min(p.lo,i.price);p.hi=Math.max(p.hi,i.price)});
+  const pr=Object.values(P).sort((a,b)=>b.r-a.r),TQ=f.reduce((s,i)=>s+i.qty,0),TR=f.reduce((s,i)=>s+i.qty*i.price,0);
+  const D={};f.forEach(i=>{const d=D[i.date]||(D[i.date]={q:0,r:0});d.q+=i.qty;d.r+=i.qty*i.price});
+  const dk=Object.keys(D).sort(),nd=dk.length,aq=TQ/nd;
+  const hi=dk.reduce((a,k)=>D[k].q>D[a].q?k:a,dk[0]),lo=dk.reduce((a,k)=>D[k].q<D[a].q?k:a,dk[0]);
+  const W=Array.from({length:7},()=>({q:0,n:0}));dk.forEach(k=>{const w=pd(k).getDay();W[w].q+=D[k].q;W[w].n++});
+  const wd=W.map((w,i)=>({l:WL[i],v:w.n?w.q/w.n:0})),bw=wd.reduce((a,b)=>b.v>a.v?b:a);
+  const ord=[1,2,3,4,5,6,0].map(i=>wd[i]);
+  const cd=(l,v,d)=>`<div class="c"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+  const outs=S.outlets.map(o=>{const it=o.items.filter(i=>f.some(x=>x===i||(x.o===o.name&&x.date===i.date&&x.qty===i.qty&&x.prod===i.prod&&x.price===i.price)));return{l:'Outlet '+o.name,q:it.reduce((s,i)=>s+i.qty,0),r:it.reduce((s,i)=>s+i.qty*i.price,0)}});
+  return head+`<div class="grid">${cd('Total porsi',TQ,nd+' hari tercatat')}${cd('Total omzet','Rp '+rp(TR),'periode terpilih')}${cd('Harga rata-rata','Rp '+rp(TR/TQ),'per porsi (tertimbang)')}${cd('Rata-rata/hari',n1(aq)+' porsi','Rp '+rp(TR/nd))}</div>
+  <div class="sec">Tren harian</div><div class="c"><div class="d" style="margin-bottom:6px">Porsi per hari (14 hari terakhir), garis putus = rata-rata</div>${vb(dk.slice(-14).map(k=>({l:pd(k).getDate(),v:D[k].q})),aq)}</div>
+  <div class="sec">Pola hari</div><div class="c"><div class="d" style="margin-bottom:6px">Rata-rata porsi per hari dalam minggu</div>${vb(ord)}</div>
+  <div class="sec">Per produk</div><div class="c"><b>Omzet</b>${hb(pr.map(p=>({l:p.n,v:p.r,t:'Rp '+rp(p.r)+' · '+Math.round(p.r/TR*100)+'%'})))}<div style="margin-top:16px"><b>Jumlah porsi</b></div>${hb(pr.map(p=>({l:p.n,v:p.q,t:p.q+' porsi'})))}<div style="margin-top:16px"><b>Harga rata-rata</b></div>${hb(pr.map(p=>({l:p.n,v:p.r/p.q,t:'Rp '+rp(p.r/p.q)})))}</div>
+  ${pr.map(p=>`<div class="c" style="margin-top:12px"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">${esc(p.n)}</b><span class="tag">${Math.round(p.r/TR*100)}% omzet</span></div><div class="ms"><div>Total porsi<b>${p.q}</b></div><div>Omzet<b>Rp ${rp(p.r)}</b></div><div>Harga rata-rata<b>Rp ${rp(p.r/p.q)}</b></div><div>Porsi per hari<b>${n1(p.q/p.d.size)}</b></div></div><div class="d">Rentang harga: ${p.lo===p.hi?'tetap Rp '+rp(p.lo):'Rp '+rp(p.lo)+' sampai Rp '+rp(p.hi)} · terjual di ${p.d.size} hari</div></div>`).join('')}
+  ${S.outlets.length>1?`<div class="sec">Per outlet</div><div class="c">${hb(outs.map(o=>({l:o.l,v:o.r,t:o.q+' porsi · Rp '+rp(o.r)})))}</div>`:''}
+  <div class="sec">Catatan evaluasi</div><div class="c">
+  <div class="ev"><span>Produk terlaris</span>${esc(pr[0].n)} (${pr[0].q} porsi, ${Math.round(pr[0].r/TR*100)}% omzet)</div>
+  <div class="ev"><span>Hari tertinggi</span>${fd(hi)} (${D[hi].q} porsi)</div>
+  <div class="ev"><span>Hari terendah</span>${fd(lo)} (${D[lo].q} porsi)</div>
+  <div class="ev"><span>Hari paling ramai (rata-rata)</span>${bw.l} (${n1(bw.v)} porsi)</div>
+  <div class="ev"><span>Konsistensi harga</span>${pr.every(p=>p.lo===p.hi)?'Harga satuan stabil di semua produk':pr.filter(p=>p.lo!==p.hi).map(p=>esc(p.n)).join(', ')+' memiliki harga yang berubah-ubah'}</div></div>`;
+}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const r3=x=>Math.round(x*1000)/1000,fq=x=>String(r3(x)).replace('.',',');
+const PL={bln:'bulan ini','7':'7 hari terakhir',all:'semua waktu'};
+const sg=n=>(n<0?'−':'')+'Rp '+rp(Math.abs(n));
+function inP(d){if(per==='all')return true;const t=new Date();return per==='bln'?d.startsWith(iso(t).slice(0,7)):d>=iso(new Date(t.getTime()-6*864e5))}
+let GS={m:'',id:'',w:0};
+function stock(){S.bahan=S.bahan||[];S.mov=S.mov||[];return S.bahan.map(b=>{const m=S.mov.filter(x=>x.b===b.id),I=m.filter(x=>x.t==='in'),qi=I.reduce((s,x)=>s+x.qty,0),ti=I.reduce((s,x)=>s+x.total,0),qo=m.filter(x=>x.t==='out').reduce((s,x)=>s+x.qty,0),avg=qi?ti/qi:0;return{...b,qi,qo,sisa:r3(qi-qo),avg,nilai:(qi-qo)*avg}})}
+const bn=id=>(S.bahan.find(b=>b.id===id)||{nama:'(dihapus)',sat:''});
+function bsum(){const st=stock(),exp=S.mov.filter(x=>x.t==='in'&&!x.awal&&inP(x.date)).reduce((s,x)=>s+x.total,0),om=S.outlets.reduce((s,o)=>s+o.items.filter(i=>inP(i.date)).reduce((a,i)=>a+i.qty*i.price,0),0);return{st,exp,om,sal:om-exp}}
+function btext(){const {st,exp,om,sal}=bsum();let t=`Rekap bahan baku ${S.nama||'RR77'} (${PL[per]})\nOmzet titipan: Rp ${rp(om)}\nBelanja bahan: Rp ${rp(exp)}\nSaldo: ${sg(sal)}\n\nSisa stok:\n`;st.forEach(b=>t+=`- ${b.nama}: ${fq(b.sisa)} ${b.sat} (Rp ${rp(b.nilai)})\n`);return t}
+function bahan(){
+  const {st,exp,om,sal}=bsum(),nil=st.reduce((s,b)=>s+b.nilai,0),low=st.filter(b=>b.sisa<=(b.min||0)).length;
+  const chips=`<div class="chips">${[['bln','Bulan ini'],['7','7 hari'],['all','Semua']].map(([k,l])=>`<button class="chip ${per===k?'on':''}" data-a="per" data-p="${k}">${l}</button>`).join('')}</div>`;
+  const mv=S.mov.map((x,i)=>({...x,i})).sort((a,b)=>b.date.localeCompare(a.date)||b.i-a.i).slice(0,25);
+  const byb=st.map(b=>({l:b.nama,v:S.mov.filter(x=>x.b===b.id&&x.t==='in'&&!x.awal&&inP(x.date)).reduce((s,x)=>s+x.total,0)})).filter(r=>r.v>0).sort((a,b)=>b.v-a.v);
+  return `<h1>Bahan baku</h1><p class="sub">Belanja, sisa stok, dan saldo</p>${chips}
+  <div class="hero"><small>SALDO · ${PL[per].toUpperCase()}</small><div class="hv">${sg(sal)}</div><div class="hd2"><span>Omzet Rp ${rp(om)}</span><span>Belanja Rp ${rp(exp)}</span></div></div>
+  <div class="d" style="margin:-4px 4px 14px">Saldo = omzet titipan dikurangi belanja bahan baku pada periode ini.</div>
+  <div class="acts"><button class="btn p" data-a="bin">${ic('plus')}Belanja</button><button class="btn" data-a="bout">Pakai / keluar</button><button class="btn" data-a="bnew">+ Bahan</button></div>
+  ${msg?`<p><b>${msg}</b></p>`:''}
+  <div class="grid"><div class="c"><div class="l">${ic('box')}Nilai stok</div><div class="v">Rp ${rp(nil)}</div><div class="d">${st.length} jenis bahan</div></div><div class="c"><div class="l">${ic('list')}Perlu belanja</div><div class="v ${low?'r':''}">${low}</div><div class="d">stok habis / menipis</div></div></div>
+  <div class="sec">Sisa stok</div>
+  ${st.length?st.map(b=>{const k=b.sisa<=0?['Habis','d']:b.sisa<=(b.min||0)?['Menipis','w']:['Aman',''];return `<div class="c" style="margin-bottom:12px" data-a="eb" data-id="${b.id}"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">${esc(b.nama)}</b><span class="tag ${k[1]}">${k[0]}</span></div><div class="v" style="font-size:1.8rem;font-weight:700">${fq(b.sisa)} <span class="d" style="font-size:.9rem">${esc(b.sat)}</span></div><div class="tr" style="margin:8px 0"><i style="width:${b.qi>0?Math.max(0,Math.min(100,b.sisa/b.qi*100)):0}%"></i></div><div class="ms"><div>Total masuk<b>${fq(b.qi)} ${esc(b.sat)}</b></div><div>Total keluar<b>${fq(b.qo)} ${esc(b.sat)}</b></div><div>Harga rata-rata<b>Rp ${rp(b.avg)}/${esc(b.sat)}</b></div><div>Nilai stok<b>Rp ${rp(b.nilai)}</b></div></div><div class="d">Stok minimum ${fq(b.min||0)} ${esc(b.sat)} · ketuk untuk ubah</div></div>`}).join(''):'<div class="c"><span class="d">Belum ada bahan baku. Tekan "+ Bahan" untuk menambah, mis. beras, ayam, atau bumbu.</span></div>'}
+  ${byb.length?`<div class="sec">Pengeluaran per bahan</div><div class="c">${hb(byb.map(r=>({l:r.l,v:r.v,t:'Rp '+rp(r.v)})))}</div>`:''}
+  <div class="sec">Riwayat</div><div class="c">${mv.length?mv.map(x=>{const b=bn(x.b);return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${x.t==='in'?(x.awal?'Stok awal':'Belanja'):(x.jenis||'Pakai')} · ${esc(b.nama)}${x.ket&&!x.awal?' · '+esc(x.ket):''}</div></div><div style="text-align:right">${x.t==='in'?'+':'−'}${fq(x.qty)} ${esc(b.sat)}${x.t==='in'?'<div class="m">Rp '+rp(x.total)+'</div>':''}</div><button class="x" data-a="delmv" data-id="${x.id}">×</button></div>`}).join(''):'<span class="d">Belum ada riwayat.</span>'}</div>
+  <div class="acts" style="margin-top:12px"><button class="btn" data-a="copyb">${ic('copy')}Salin rekap bahan</button></div>`;
+}
+function openG(m,id){
+  const st=stock();if((m==='in'||m==='out')&&!st.length){m='master';id=''}
+  GS={m,id:id||'',w:0};const today=iso(new Date());
+  const opt=st.map(b=>`<option value="${b.id}">${esc(b.nama)} (${m==='out'?'sisa '+fq(b.sisa)+' ':''}${esc(b.sat)})</option>`).join('');
+  const e=st.find(b=>b.id===id)||{};
+  let h='';
+  if(m==='in')h=`<h2>Belanja bahan</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Total harga (Rp)</label><input type="number" id="b4" inputmode="numeric"></div><div><label>Toko / catatan</label><input id="b5"></div></div><div class="d" id="b6" style="margin-top:8px"></div>`;
+  else if(m==='out')h=`<h2>Pakai / keluar</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Jenis</label><select id="b4"><option>Pemakaian produksi</option><option>Rusak / terbuang</option><option>Koreksi stok</option></select></div><div><label>Catatan</label><input id="b5"></div></div>`;
+  else h=`<h2>${id?'Ubah bahan':'Bahan baru'}</h2><label>Nama bahan</label><input id="b1" value="${esc(e.nama||'')}" placeholder="mis. Beras"><div class="two"><div><label>Satuan</label><input id="b2" list="sat" value="${esc(e.sat||'')}" placeholder="kg"><datalist id="sat"><option>kg</option><option>gram</option><option>liter</option><option>pcs</option><option>ikat</option><option>pack</option><option>butir</option></datalist></div><div><label>Stok minimum</label><input type="number" id="b3" step="any" value="${e.min||0}"></div></div>${id?'':'<div class="two"><div><label>Stok awal</label><input type="number" id="b4" step="any" placeholder="0"></div><div><label>Harga/satuan awal (Rp)</label><input type="number" id="b5" placeholder="0"></div></div>'}`;
+  h+=`<div class="d" id="b9" style="color:#dc2626;margin-top:8px"></div><div class="acts" style="margin:14px 0 0"><button class="btn p" data-a="s2save" style="flex:1;justify-content:center">Simpan</button>${id&&m==='master'?'<button class="btn" data-a="delb" id="bd">Hapus</button>':''}<button class="btn" data-a="s2close">Batal</button></div>`;
+  $('#sh2b').innerHTML=h;if(id&&m!=='master')$('#b1').value=id;$('#sh2').classList.add('on');
+}
+function saveG(){
+  const m=GS.m,v=i=>{const x=$('#b'+i);return x?x.value:''},err=t=>{$('#b9').textContent=t};
+  if(m==='master'){const n=v(1).trim(),sat=v(2).trim();if(!n||!sat)return err('Nama dan satuan wajib diisi');
+    if(GS.id){const b=S.bahan.find(x=>x.id===GS.id);b.nama=n;b.sat=sat;b.min=+v(3)||0}
+    else{const b={id:uid(),nama:n,sat,min:+v(3)||0};S.bahan.push(b);const q=+v(4)||0;if(q>0)S.mov.push({id:uid(),t:'in',b:b.id,date:iso(new Date()),qty:q,total:q*(+v(5)||0),awal:1,ket:'Stok awal'})}}
+  else if(m==='in'){const q=+v(3),t=+v(4);if(!(q>0)||!(t>0)||!v(2))return err('Isi tanggal, jumlah, dan total harga');S.mov.push({id:uid(),t:'in',b:v(1),date:v(2),qty:q,total:t,ket:v(5).trim()})}
+  else{const q=+v(3);if(!(q>0)||!v(2))return err('Isi tanggal dan jumlah');const s=stock().find(x=>x.id===v(1));
+    if(s&&q>s.sisa&&!GS.w){GS.w=1;return err('Jumlah melebihi sisa stok ('+fq(s.sisa)+' '+s.sat+'). Tekan Simpan lagi untuk melanjutkan.')}
+    S.mov.push({id:uid(),t:'out',b:v(1),date:v(2),qty:q,jenis:v(4),ket:v(5).trim()})}
+  save();$('#sh2').classList.remove('on');msg='Tersimpan';render();
+}
+document.addEventListener('input',e=>{if(GS.m==='in'&&(e.target.id==='b3'||e.target.id==='b4')){const q=+$('#b3').value,t=+$('#b4').value;$('#b6').textContent=q>0&&t>0?'Harga per satuan: Rp '+rp(t/q):''}});
+const V={home,out,ana,bhn:bahan,rep,more};
+function render(){
+  const now=new Date();$('#hd').textContent=`${DY[now.getDay()]}, ${now.getDate()} ${ML[now.getMonth()]} ${now.getFullYear()}`;
+  $('#hn').textContent=S.nama||'RR77';document.title=S.nama||'RR77';
+  $('#lgo').className='logo'+(S.logo?' has':'');$('#lgo').innerHTML=S.logo?`<img src="${S.logo}" alt="Logo">`:ic('store');
+  $('#app').innerHTML=V[tab]();
+  $('#nav').innerHTML=NAV.map(([k,i,l])=>`<button class="${tab===k?'on':''}" data-t="${k}">${ic(i)}${l}${k==='more'&&!S.backupAt?'<span class="dot"></span>':''}</button>`).join('');
+}
+async function cp(t){try{await navigator.clipboard.writeText(t);return 1}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=0;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}}
+function openSheet(oi){
+  $('#fo').innerHTML=S.outlets.map((o,i)=>`<option value="${i}">${esc(o.name)}</option>`).join('');
+  $('#fo').value=oi||0;$('#fd').value=iso(new Date());$('#fq').value='';$('#sh').classList.add('on');
+}
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-t]');if(t){tab=t.dataset.t;msg='';render();window.scrollTo(0,0);return}
+  const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sh')$('#sh').classList.remove('on');if(e.target.id==='sh2')$('#sh2').classList.remove('on');return}
+  const a=b.dataset.a;msg='';
+  if(a==='add')openSheet(+b.dataset.o||0);
+  else if(a==='close')$('#sh').classList.remove('on');
+  else if(a==='save'){const q=+$('#fq').value,p=+$('#fh').value,d=$('#fd').value;if(!q||!p||!d)return;
+    S.outlets[$('#fo').value].items.push({date:d,qty:q,prod:$('#fp').value.trim()||'Nasi bakar',price:p});save();$('#sh').classList.remove('on');msg='Titipan tersimpan';render()}
+  else if(a==='addo'){const n=prompt('Nama outlet (mis. SJ TSM)');if(n&&n.trim()){S.outlets.push({name:n.trim(),items:[]});save();render()}}
+  else if(a==='del'){S.outlets[b.dataset.o].items.splice(b.dataset.i,1);save();render()}
+  else if(a==='copyrep'){msg=(await cp(report()))?'Laporan tersalin':'Gagal menyalin, salin manual dari tab Laporan';render()}
+  else if(a==='backup'){msg=(await cp(JSON.stringify(S)))?'Cadangan tersalin':'Gagal menyalin';if(msg==='Cadangan tersalin'){S.backupAt=Date.now();save()}render()}
+  else if(a==='savenm'){S.nama=$('#nm').value.trim()||'RR77';save();msg='Nama usaha disimpan';render()}
+  else if(a==='rmlogo'){delete S.logo;save();msg='Logo dihapus';render()}
+  else if(a==='bin'||a==='bout'||a==='bnew'||a==='eb')openG(a==='bin'?'in':a==='bout'?'out':'master',b.dataset.id)
+  else if(a==='s2close')$('#sh2').classList.remove('on');
+  else if(a==='s2save')saveG();
+  else if(a==='delmv'){S.mov=S.mov.filter(x=>x.id!==b.dataset.id);save();render()}
+  else if(a==='delb'){if(!GS.w){GS.w=1;b.textContent='Yakin hapus?';return}S.bahan=S.bahan.filter(x=>x.id!==GS.id);S.mov=S.mov.filter(x=>x.b!==GS.id);save();$('#sh2').classList.remove('on');render()}
+  else if(a==='copyb'){msg=(await cp(btext()))?'Rekap tersalin':'Gagal menyalin';render()}
+  else if(a==='per'){per=b.dataset.p;render()}
+  else if(a==='later'){S.backupAt=Date.now();save();render()}
+  else if(a==='restore'){try{const d=JSON.parse($('#rs').value);if(!d.outlets)throw 0;S=d;save();msg='Data dipulihkan'}catch(x){msg='Teks cadangan tidak valid'}render()}
+  else if(a==='reset'){if(confirm('Hapus semua data?')){S={outlets:[{name:'SJ TSM',items:[]}]};save();render()}}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id!=='lg')return;const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
+    const z=192,sc=Math.min(z/im.width,z/im.height,1),c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);
+    c.getContext('2d').drawImage(im,0,0,c.width,c.height);S.logo=c.toDataURL('image/png');save();msg='Logo disimpan';render()};
+    im.onerror=()=>{msg='File gambar tidak bisa dibaca';render()};im.src=r.result};r.readAsDataURL(f);
+});
+render();
+</script>
+</body>
+</html>
