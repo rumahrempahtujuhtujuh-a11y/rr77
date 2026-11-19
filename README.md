@@ -54,3 +54,7 @@ Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan
 ## Catatan
 - Keamanan: semua data lewat `/api/data` dengan PIN. Setelah 10 kali salah PIN, alamat IP itu dikunci 10 menit.
 - Font memakai Google Fonts. Tanpa internet, tampilan memakai font cadangan.
+
+## Versi
+- **1.1.0** (20 Nov 2026): ikon tambah pada tombol Titipan dan Bahan, ikon hapus (tempat sampah) untuk titipan, pembayaran, riwayat bahan, bahan, dan outlet; hapus outlet; nomor versi di Lainnya dan layar PIN; latar logo transparan (putih tepi dibuang saat unggah); ikon masuk dan keluar.
+- Nomor versi ada di `APP_V` dalam `index.html`; naikkan setiap kali ada perubahan.
