@@ -43,6 +43,7 @@ function valid(d) {
     p.o < d.outlets.length && num(p.amt) && isDate(p.date)))) return false;
   if (d.bahan != null && !Array.isArray(d.bahan)) return false;
   if (d.mov != null && !Array.isArray(d.mov)) return false;
+  if (d.rek != null && !Array.isArray(d.rek)) return false;
   if (d.logo != null && !/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(d.logo)) return false;
   return true;
 }

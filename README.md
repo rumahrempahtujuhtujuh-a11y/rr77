@@ -33,6 +33,15 @@ Satu file tampilan (`index.html`) dan satu fungsi server (`api/data.js`), tanpa 
 - Pembayaran dialokasikan ke titipan paling lama lebih dulu, sehingga tiap titipan di tab Outlet berlabel *Lunas*, *Sebagian*, atau *Belum*.
 - Beranda menampilkan *Belum dibayar* dan *Sudah diterima*. Laporan WhatsApp menambahkan baris *Sudah dibayar* dan *Sisa* bila sudah ada pembayaran.
 
+## Alur tagihan per periode
+- Titipan dicatat tiap hari. Setelah sekitar 7 sampai 8 hari, tagih ke outlet lalu tekan **Tutup tagihan** (menu Bayar, per outlet).
+- Titipan dan pembayaran periode itu ditandai tertutup, sehingga **tagihan kembali 0** dan dihitung lagi dari awal. Data lama tidak dihapus: tetap dipakai untuk analisa dan tersimpan di *Tagihan yang sudah ditutup* (ada tombol Salin untuk laporannya).
+- Sisa yang belum dibayar saat tutup tidak dibawa ke periode baru, hanya tercatat di riwayat.
+- Beranda menampilkan pengingat bila titipan sebuah outlet sudah 7 hari atau lebih.
+
+## Menu Beranda dan Analisa
+Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan ini / 7 hari / Semua) di bawahnya.
+
 ## Catatan
 - Keamanan: semua data lewat `/api/data` dengan PIN. Setelah 10 kali salah PIN, alamat IP itu dikunci 10 menit.
 - Font memakai Google Fonts. Tanpa internet, tampilan memakai font cadangan.
