@@ -143,6 +143,16 @@ nav button.on::before{content:"";position:absolute;top:0;width:22px;height:3px;b
 .lk .lg.has{background:none;box-shadow:none}.lk .lg img{width:100%;height:100%;object-fit:contain}
 main{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}
 nav:empty{display:none}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.flow button{background:var(--cd);border:1px solid var(--bd);border-radius:16px;padding:10px 4px;font:inherit;color:var(--tx);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-weight:700;font-size:.82rem;box-shadow:var(--shd)}
+.flow em{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:.85rem}
+.flow small{color:var(--mu);font-weight:500;font-size:.68rem}
+.eq{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;text-align:center;margin:8px 0}
+.eq div{font-size:.66rem;color:var(--mu);line-height:1.2;background:var(--inp);border-radius:10px;padding:6px 2px}
+.eq b{display:block;font-size:.86rem;color:var(--tx);margin-top:2px;white-space:nowrap}.eq .z{background:var(--acct)}.eq .z b{color:var(--acc)}
+.kr{display:grid;grid-template-columns:38px 1fr 46px 46px 52px;gap:6px;font-size:.78rem;padding:7px 0;border-bottom:1px solid var(--bd);align-items:start}
+.kr i{color:var(--mu);font-style:normal;font-size:.72rem}.kr .g{color:var(--gr);text-align:right}.kr .rr{color:#dc2626;text-align:right}.kr b{text-align:right}
+.kh{font-weight:700;color:var(--mu);font-size:.68rem;text-transform:uppercase}.kh span:nth-child(n+3){text-align:right}
 </style>
 </head>
 <body>
@@ -258,7 +268,7 @@ async function boot(){
     S=L;REV=lr;dirty=ld;norm();render();setStat('Offline: memakai salinan di perangkat ini')
   }else fail((res&&res.j&&res.j.error)||'Tidak bisa terhubung ke server. Periksa internet.');
 }
-const APP_V='1.3.0',APP_D='20 Nov 2026';
+const APP_V='1.4.0',APP_D='20 Nov 2026';
 let tab='home',pre=0,msg='',per='bln';
 const act=o=>o.items.filter(i=>!i.c);
 const tot=o=>act(o).reduce((s,i)=>s+i.qty*i.price,0);
@@ -379,50 +389,71 @@ function inP(d){if(per==='all')return true;const t=new Date();return per==='bln'
 let GS={m:'',id:'',w:0};
 function stock(){S.bahan=S.bahan||[];S.mov=S.mov||[];return S.bahan.map(b=>{const m=S.mov.filter(x=>x.b===b.id),I=m.filter(x=>x.t==='in'),qi=I.reduce((s,x)=>s+x.qty,0),ti=I.reduce((s,x)=>s+x.total,0),qo=m.filter(x=>x.t==='out').reduce((s,x)=>s+x.qty,0),avg=qi?ti/qi:0;return{...b,qi,qo,sisa:r3(qi-qo),avg,nilai:(qi-qo)*avg}})}
 const bn=id=>(S.bahan.find(b=>b.id===id)||{nama:'(dihapus)',sat:''});
-function bsum(){const st=stock(),exp=S.mov.filter(x=>x.t==='in'&&!x.awal&&inP(x.date)).reduce((s,x)=>s+x.total,0),om=S.outlets.reduce((s,o)=>s+o.items.filter(i=>inP(i.date)).reduce((a,i)=>a+i.qty*i.price,0),0);return{st,exp,om,sal:om-exp}}
-function btext(){const {st,exp,om,sal}=bsum();let t=`Rekap bahan baku ${S.nama||'RR77'} (${PL[per]})\nOmzet titipan: Rp ${rp(om)}\nBelanja bahan: Rp ${rp(exp)}\nSaldo: ${sg(sal)}\n\nSisa stok:\n`;st.forEach(b=>t+=`- ${b.nama}: ${fq(b.sisa)} ${b.sat} (Rp ${rp(b.nilai)})\n`);return t}
+function bsum(){const st=stock(),exp=S.mov.filter(x=>x.t==='in'&&!x.awal&&!x.adj&&inP(x.date)).reduce((s,x)=>s+x.total,0),om=S.outlets.reduce((s,o)=>s+o.items.filter(i=>inP(i.date)).reduce((a,i)=>a+i.qty*i.price,0),0);return{st,exp,om,sal:om-exp}}
+const rc=n=>{const a=Math.abs(n),f=x=>(Math.round(x*10)/10).toString().replace('.',',');return (n<0?'−':'')+(a>=1e6?f(a/1e6)+' jt':a>=1e4?Math.round(a/1e3)+' rb':rp(a))};
+function pstart(){const t=new Date();return per==='all'?'0000-00-00':per==='bln'?iso(t).slice(0,7)+'-01':iso(new Date(t.getTime()-6*864e5))}
+function mut(b){const s0=pstart();let a=0,i=0,o=0,j=0;S.mov.forEach(x=>{if(x.b!==b.id)return;const g=x.t==='in'?1:-1;if(x.date<s0)a+=g*x.qty;else if(x.awal)a+=x.qty;else if(x.adj)j+=g*x.qty;else if(x.t==='in')i+=x.qty;else o+=x.qty});return{a:r3(a),i:r3(i),o:r3(o),j:r3(j),z:r3(a+i-o+j)}}
+const eq=(m,f)=>`<div class="eq"><div>Awal<b>${f(m.a)}</b></div><div>+ Masuk<b>${f(m.i)}</b></div><div>− Keluar<b>${f(m.o)}</b></div><div>± Opname<b>${f(m.j)}</b></div><div class="z">= Akhir<b>${f(m.z)}</b></div></div>`;
+const mlab=x=>x.t==='in'?(x.awal?'Stok awal':x.adj?'Opname (+)':'Belanja'):(x.adj?'Opname (−)':(x.jenis||'Pakai'));
+function btext(){const {st,exp,om,sal}=bsum();let t=`Rekap bahan baku ${S.nama||'RR77'} (${PL[per]})\nOmzet titipan: Rp ${rp(om)}\nBelanja bahan: Rp ${rp(exp)}\nSaldo: ${sg(sal)}\n\nMutasi stok:\n`;st.forEach(b=>{const m=mut(b);t+=`- ${b.nama}: awal ${fq(m.a)} + masuk ${fq(m.i)} - keluar ${fq(m.o)} +/- opname ${fq(m.j)} = ${fq(m.z)} ${b.sat} (Rp ${rp(b.nilai)})\n`});return t}
+function kartu(id){
+  const b=stock().find(x=>x.id===id);if(!b)return;
+  const L=S.mov.map((x,i)=>({...x,i})).filter(x=>x.b===id).sort((a,c)=>a.date.localeCompare(c.date)||a.i-c.i);let sal=0;
+  const rows=L.map(x=>{sal=r3(sal+(x.t==='in'?x.qty:-x.qty));return `<div class="kr"><span>${x.date.slice(8)}/${x.date.slice(5,7)}</span><span>${mlab(x)}${x.ket&&!x.awal?'<br><i>'+esc(x.ket)+'</i>':''}</span><span class="g">${x.t==='in'?fq(x.qty):''}</span><span class="rr">${x.t==='out'?fq(x.qty):''}</span><b>${fq(sal)}</b></div>`}).join('');
+  GS={m:'kst',id,w:0};
+  $('#sh2b').innerHTML=`<h2>Kartu stok · ${esc(b.nama)}</h2><div class="d">Satuan ${esc(b.sat)} · harga rata-rata Rp ${rp(b.avg)} · minimum ${fq(b.min||0)}</div><div class="kr kh"><span>Tgl</span><span>Keterangan</span><span>Masuk</span><span>Keluar</span><span>Saldo</span></div>${rows||'<div class="d" style="padding:10px 0">Belum ada mutasi.</div>'}<div class="row"><b>Stok akhir</b><b>${fq(b.sisa)} ${esc(b.sat)} · Rp ${rp(b.nilai)}</b></div><div class="acts" style="margin:10px 0 0"><button class="btn p s" data-a="bin" data-id="${id}">Masuk</button><button class="btn s" data-a="bout" data-id="${id}">Keluar</button><button class="btn s" data-a="bop" data-id="${id}">Opname</button><button class="btn s" data-a="eb" data-id="${id}">${ic('edit')}Ubah</button><button class="btn s" data-a="s2close">Tutup</button></div>`;
+  $('#sh2').classList.add('on');
+}
 function bahan(){
-  const {st,exp,om,sal}=bsum(),nil=st.reduce((s,b)=>s+b.nilai,0),low=st.filter(b=>b.sisa<=(b.min||0)).length;
+  const {st,exp,om,sal}=bsum(),M=st.map(b=>({b,m:mut(b)})),nil=st.reduce((s,b)=>s+b.nilai,0),low=st.filter(b=>b.sisa<=(b.min||0)).length;
+  const T={};['a','i','o','j','z'].forEach(k=>T[k]=M.reduce((s,x)=>s+x.m[k]*x.b.avg,0));
   const chips=`<div class="chips">${[['bln','Bulan ini'],['7','7 hari'],['all','Semua']].map(([k,l])=>`<button class="chip ${per===k?'on':''}" data-a="per" data-p="${k}">${l}</button>`).join('')}</div>`;
   const mv=S.mov.map((x,i)=>({...x,i})).sort((a,b)=>b.date.localeCompare(a.date)||b.i-a.i).slice(0,25);
-  const byb=st.map(b=>({l:b.nama,v:S.mov.filter(x=>x.b===b.id&&x.t==='in'&&!x.awal&&inP(x.date)).reduce((s,x)=>s+x.total,0)})).filter(r=>r.v>0).sort((a,b)=>b.v-a.v);
-  return `<h1>Bahan baku</h1><p class="sub">Belanja, sisa stok, dan saldo</p>${chips}
+  const byb=st.map(b=>({l:b.nama,v:S.mov.filter(x=>x.b===b.id&&x.t==='in'&&!x.awal&&!x.adj&&inP(x.date)).reduce((s,x)=>s+x.total,0)})).filter(r=>r.v>0).sort((a,b)=>b.v-a.v);
+  return `<h1>Bahan baku</h1><p class="sub">Alur stok: masuk, keluar, opname, saldo</p>${chips}
   <div class="hero"><small>${ic('wallet')}Saldo ${PL[per]}</small><div class="hv">${sg(sal)}</div><div class="hd2"><span>Omzet Rp ${rp(om)}</span><span>Belanja Rp ${rp(exp)}</span></div></div>
   <div class="d" style="margin:-4px 4px 14px">Saldo = omzet titipan dikurangi belanja bahan baku pada periode ini.</div>
-  <div class="acts"><button class="btn p" data-a="bin">${ic('plus')}Belanja</button><button class="btn" data-a="bout">${ic('logout')}Pakai / keluar</button><button class="btn" data-a="bnew">${ic('plus')}Bahan</button></div>
   ${msg?`<p><b>${msg}</b></p>`:''}
-  <div class="grid"><div class="c"><div class="l">${ic('box')}Nilai stok</div><div class="v">Rp ${rp(nil)}</div><div class="d">${st.length} jenis bahan</div></div><div class="c"><div class="l">${ic('list')}Perlu belanja</div><div class="v ${low?'r':''}">${low}</div><div class="d">stok habis / menipis</div></div></div>
-  <div class="sec">Sisa stok</div>
-  ${st.length?st.map(b=>{const k=b.sisa<=0?['Habis','d']:b.sisa<=(b.min||0)?['Menipis','w']:['Aman',''];return `<div class="c" style="margin-bottom:12px" data-a="eb" data-id="${b.id}"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">${esc(b.nama)}</b><span style="display:flex;align-items:center;gap:4px"><span class="tag ${k[1]}">${k[0]}</span><button class="x" data-a="delbh" data-id="${b.id}" aria-label="Hapus bahan">${ic('trash')}</button></span></div><div class="v" style="font-size:1.8rem;font-weight:700">${fq(b.sisa)} <span class="d" style="font-size:.9rem">${esc(b.sat)}</span></div><div class="tr" style="margin:8px 0"><i style="width:${b.qi>0?Math.max(0,Math.min(100,b.sisa/b.qi*100)):0}%"></i></div><div class="ms"><div>Total masuk<b>${fq(b.qi)} ${esc(b.sat)}</b></div><div>Total keluar<b>${fq(b.qo)} ${esc(b.sat)}</b></div><div>Harga rata-rata<b>Rp ${rp(b.avg)}/${esc(b.sat)}</b></div><div>Nilai stok<b>Rp ${rp(b.nilai)}</b></div></div><div class="d">Stok minimum ${fq(b.min||0)} ${esc(b.sat)} · ketuk untuk ubah</div></div>`}).join(''):'<div class="c"><span class="d">Belum ada bahan baku. Tekan "+ Bahan" untuk menambah, mis. beras, ayam, atau bumbu.</span></div>'}
+  <div class="sec">Alur stok</div>
+  <div class="flow"><button data-a="bnew"><em>1</em>Bahan<small>Daftar</small></button><button data-a="bin"><em>2</em>Masuk<small>Belanja</small></button><button data-a="bout"><em>3</em>Keluar<small>Pakai</small></button><button data-a="bop"><em>4</em>Opname<small>Hitung fisik</small></button></div>
+  <div class="sec">Ringkasan mutasi</div><div class="c">${eq(T,rc)}<div class="d">Dalam Rp, nilai pada harga rata-rata · ${PL[per]}</div></div>
+  <div class="grid" style="margin-top:12px"><div class="c"><div class="l">${ic('box')}Nilai stok akhir</div><div class="v">Rp ${rp(nil)}</div><div class="d">${st.length} jenis bahan</div></div><div class="c"><div class="l">${ic('list')}Perlu belanja</div><div class="v ${low?'r':''}">${low}</div><div class="d">stok habis / menipis</div></div></div>
+  <div class="sec">Kartu stok per bahan</div>
+  ${st.length?M.map(({b,m})=>{const k=b.sisa<=0?['Habis','d']:b.sisa<=(b.min||0)?['Menipis','w']:['Aman',''];return `<div class="c" style="margin-bottom:12px" data-a="kst" data-id="${b.id}"><div class="row" style="padding-top:0"><b class="serif" style="font-size:1.1rem">${esc(b.nama)}</b><span style="display:flex;align-items:center;gap:4px"><span class="tag ${k[1]}">${k[0]}</span><button class="x" data-a="delbh" data-id="${b.id}" aria-label="Hapus bahan">${ic('trash')}</button></span></div><div class="v" style="font-size:1.7rem;font-weight:700">${fq(b.sisa)} <span class="d" style="font-size:.9rem">${esc(b.sat)} stok akhir</span></div>${eq(m,fq)}<div class="d">Rata-rata Rp ${rp(b.avg)}/${esc(b.sat)} · nilai Rp ${rp(b.nilai)} · minimum ${fq(b.min||0)}</div><div class="d" style="margin-top:2px">Ketuk untuk melihat kartu stok</div></div>`}).join(''):'<div class="c"><span class="d">Belum ada bahan baku. Mulai dari langkah 1: tekan Bahan untuk menambah, mis. beras, ayam, atau bumbu.</span></div>'}
   ${byb.length?`<div class="sec">Pengeluaran per bahan</div><div class="c">${hb(byb.map(r=>({l:r.l,v:r.v,t:'Rp '+rp(r.v)})))}</div>`:''}
-  <div class="sec">Riwayat</div><div class="c">${mv.length?mv.map(x=>{const b=bn(x.b);return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${x.t==='in'?(x.awal?'Stok awal':'Belanja'):(x.jenis||'Pakai')} · ${esc(b.nama)}${x.ket&&!x.awal?' · '+esc(x.ket):''}</div></div><div style="text-align:right">${x.t==='in'?'+':'−'}${fq(x.qty)} ${esc(b.sat)}${x.t==='in'?'<div class="m">Rp '+rp(x.total)+'</div>':''}</div><button class="x" data-a="emv" data-id="${x.id}" aria-label="Ubah">${ic('edit')}</button><button class="x" data-a="delmv" data-id="${x.id}" aria-label="Hapus riwayat">${ic('trash')}</button></div>`}).join(''):'<span class="d">Belum ada riwayat.</span>'}</div>
+  <div class="sec">Riwayat transaksi</div><div class="c">${mv.length?mv.map(x=>{const b=bn(x.b);return `<div class="row"><div><b>${fd(x.date)}</b><div class="m">${mlab(x)} · ${esc(b.nama)}${x.ket&&!x.awal?' · '+esc(x.ket):''}</div></div><div style="text-align:right">${x.t==='in'?'+':'−'}${fq(x.qty)} ${esc(b.sat)}${x.t==='in'&&!x.adj?'<div class="m">Rp '+rp(x.total)+'</div>':''}</div>${x.adj?'':`<button class="x" data-a="emv" data-id="${x.id}" aria-label="Ubah">${ic('edit')}</button>`}<button class="x" data-a="delmv" data-id="${x.id}" aria-label="Hapus riwayat">${ic('trash')}</button></div>`}).join(''):'<span class="d">Belum ada riwayat.</span>'}</div>
   <div class="acts" style="margin-top:12px"><button class="btn" data-a="copyb">${ic('copy')}Salin rekap bahan</button></div>`;
 }
 function openG(m,id,mvid){
-  const st=stock();if((m==='in'||m==='out')&&!st.length){m='master';id=''}
+  const st=stock();if((m==='in'||m==='out'||m==='opname')&&!st.length){m='master';id=''}
   const MV=mvid?S.mov.find(x=>x.id===mvid):null;GS={m,id:id||'',w:0,mv:MV?MV.id:''};const today=iso(new Date());
-  const opt=st.map(b=>`<option value="${b.id}">${esc(b.nama)} (${m==='out'?'sisa '+fq(b.sisa)+' ':''}${esc(b.sat)})</option>`).join('');
+  const opt=st.map(b=>`<option value="${b.id}">${esc(b.nama)} (${m==='out'||m==='opname'?'sisa '+fq(b.sisa)+' ':''}${esc(b.sat)})</option>`).join('');
   const e=st.find(b=>b.id===id)||{};
   let h='';
   if(m==='in')h=`<h2>${MV?'Ubah belanja':'Belanja bahan'}</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Total harga (Rp)</label><input type="number" id="b4" inputmode="numeric"></div><div><label>Toko / catatan</label><input id="b5"></div></div><div class="d" id="b6" style="margin-top:8px"></div>`;
   else if(m==='out')h=`<h2>${MV?'Ubah pemakaian':'Pakai / keluar'}</h2><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Jumlah</label><input type="number" id="b3" step="any" inputmode="decimal"></div><div><label>Jenis</label><select id="b4"><option>Pemakaian produksi</option><option>Rusak / terbuang</option><option>Koreksi stok</option></select></div><div><label>Catatan</label><input id="b5"></div></div>`;
+  else if(m==='opname')h=`<h2>Opname stok</h2><div class="d">Hitung stok fisik, lalu isi hasilnya. Selisih dengan catatan dicatat otomatis sebagai penyesuaian.</div><label>Bahan</label><select id="b1">${opt}</select><div class="two"><div><label>Tanggal</label><input type="date" id="b2" value="${today}"></div><div><label>Stok fisik</label><input type="number" id="b3" step="any" inputmode="decimal"></div></div><label>Catatan</label><input id="b5"><div class="d" id="b6" style="margin-top:8px"></div>`;
   else h=`<h2>${id?'Ubah bahan':'Bahan baru'}</h2><label>Nama bahan</label><input id="b1" value="${esc(e.nama||'')}" placeholder="mis. Beras"><div class="two"><div><label>Satuan</label><input id="b2" list="sat" value="${esc(e.sat||'')}" placeholder="kg"><datalist id="sat"><option>kg</option><option>gram</option><option>liter</option><option>pcs</option><option>ikat</option><option>pack</option><option>butir</option></datalist></div><div><label>Stok minimum</label><input type="number" id="b3" step="any" value="${e.min||0}"></div></div>${id?'':'<div class="two"><div><label>Stok awal</label><input type="number" id="b4" step="any" placeholder="0"></div><div><label>Harga/satuan awal (Rp)</label><input type="number" id="b5" placeholder="0"></div></div>'}`;
   h+=`<div class="d" id="b9" style="color:#dc2626;margin-top:8px"></div><div class="acts" style="margin:14px 0 0"><button class="btn p" data-a="s2save" style="flex:1;justify-content:center">Simpan</button>${id&&m==='master'?`<button class="btn" data-a="delb" id="bd">${ic('trash')}Hapus</button>`:''}<button class="btn" data-a="s2close">Batal</button></div>`;
   $('#sh2b').innerHTML=h;if(id&&m!=='master')$('#b1').value=id;
-  if(MV){$('#b1').value=MV.b;$('#b2').value=MV.date;$('#b3').value=MV.qty;$('#b5').value=MV.ket||'';if(MV.t==='in'){$('#b4').value=MV.total;$('#b6').textContent=MV.qty>0&&MV.total>0?'Harga per satuan: Rp '+rp(MV.total/MV.qty):''}else $('#b4').value=MV.jenis||'Pemakaian produksi'}$('#sh2').classList.add('on');
+  if(MV){$('#b1').value=MV.b;$('#b2').value=MV.date;$('#b3').value=MV.qty;$('#b5').value=MV.ket||'';if(MV.t==='in'){$('#b4').value=MV.total;$('#b6').textContent=MV.qty>0&&MV.total>0?'Harga per satuan: Rp '+rp(MV.total/MV.qty):''}else $('#b4').value=MV.jenis||'Pemakaian produksi'}if(m==='opname')opPrev();$('#sh2').classList.add('on');
 }
+function opPrev(){const s=stock().find(x=>x.id===$('#b1').value),f=$('#b3').value;$('#b6').textContent=s?'Stok sistem: '+fq(s.sisa)+' '+s.sat+(f!==''?' · selisih '+(+f-s.sisa>0?'+':'')+fq(+f-s.sisa)+' '+s.sat:''):''}
 function saveG(){
   const m=GS.m,v=i=>{const x=$('#b'+i);return x?x.value:''},err=t=>{$('#b9').textContent=t};
   if(m==='master'){const n=v(1).trim(),sat=v(2).trim();if(!n||!sat)return err('Nama dan satuan wajib diisi');
     if(GS.id){const b=S.bahan.find(x=>x.id===GS.id);b.nama=n;b.sat=sat;b.min=+v(3)||0}
     else{const b={id:uid(),nama:n,sat,min:+v(3)||0};S.bahan.push(b);const q=+v(4)||0;if(q>0)S.mov.push({id:uid(),t:'in',b:b.id,date:iso(new Date()),qty:q,total:q*(+v(5)||0),awal:1,ket:'Stok awal'})}}
   else if(m==='in'){const q=+v(3),t=+v(4);if(!(q>0)||!(t>0)||!v(2))return err('Isi tanggal, jumlah, dan total harga');const E=GS.mv&&S.mov.find(x=>x.id===GS.mv);if(E)Object.assign(E,{b:v(1),date:v(2),qty:q,total:t,ket:v(5).trim()});else S.mov.push({id:uid(),t:'in',b:v(1),date:v(2),qty:q,total:t,ket:v(5).trim()})}
+  else if(m==='opname'){const f=v(3);if(f===''||+f<0||!v(2))return err('Isi tanggal dan stok fisik');const s=stock().find(x=>x.id===v(1));if(!s)return err('Pilih bahan');const d=r3(+f-s.sisa);
+    if(!d){$('#sh2').classList.remove('on');msg='Stok fisik sama dengan catatan, tidak ada selisih';render();return}
+    S.mov.push(d>0?{id:uid(),t:'in',b:s.id,date:v(2),qty:d,total:d*s.avg,adj:1,ket:v(5).trim()}:{id:uid(),t:'out',b:s.id,date:v(2),qty:-d,adj:1,ket:v(5).trim()})}
   else{const q=+v(3);if(!(q>0)||!v(2))return err('Isi tanggal dan jumlah');const s=stock().find(x=>x.id===v(1)),E=GS.mv&&S.mov.find(x=>x.id===GS.mv),lim=s?s.sisa+(E&&E.b===s.id?E.qty:0):0;
     if(s&&q>lim&&!GS.w){GS.w=1;return err('Jumlah melebihi sisa stok ('+fq(lim)+' '+s.sat+'). Tekan Simpan lagi untuk melanjutkan.')}
     if(E)Object.assign(E,{b:v(1),date:v(2),qty:q,jenis:v(4),ket:v(5).trim()});else S.mov.push({id:uid(),t:'out',b:v(1),date:v(2),qty:q,jenis:v(4),ket:v(5).trim()})}
   save();$('#sh2').classList.remove('on');msg='Tersimpan';render();
 }
-document.addEventListener('input',e=>{if(GS.m==='pay'&&/^p[13]$/.test(e.target.id)){payPrev();return}if(GS.m==='in'&&(e.target.id==='b3'||e.target.id==='b4')){const q=+$('#b3').value,t=+$('#b4').value;$('#b6').textContent=q>0&&t>0?'Harga per satuan: Rp '+rp(t/q):''}});
+document.addEventListener('input',e=>{if(GS.m==='opname'&&(e.target.id==='b3'||e.target.id==='b1')){opPrev();return}if(GS.m==='pay'&&/^p[13]$/.test(e.target.id)){payPrev();return}if(GS.m==='in'&&(e.target.id==='b3'||e.target.id==='b4')){const q=+$('#b3').value,t=+$('#b4').value;$('#b6').textContent=q>0&&t>0?'Harga per satuan: Rp '+rp(t/q):''}});
 const paid=oi=>(S.pay||[]).filter(p=>p.o===oi&&!p.c).reduce((s,p)=>s+p.amt,0);
 const due=oi=>tot(S.outlets[oi])-paid(oi);
 // Pembayaran dialokasikan ke titipan paling lama lebih dulu (FIFO)
@@ -513,7 +544,8 @@ document.addEventListener('click',async e=>{
   else if(a==='backup'){msg=(await cp(JSON.stringify(S)))?'Cadangan tersalin':'Gagal menyalin';if(msg==='Cadangan tersalin'){S.backupAt=Date.now();save()}render()}
   else if(a==='savenm'){S.nama=$('#nm').value.trim()||'RR77';save();msg='Nama usaha disimpan';render()}
   else if(a==='rmlogo'){delete S.logo;save();msg='Logo dihapus';render()}
-  else if(a==='bin'||a==='bout'||a==='bnew'||a==='eb')openG(a==='bin'?'in':a==='bout'?'out':'master',b.dataset.id)
+  else if(a==='bin'||a==='bout'||a==='bnew'||a==='eb'||a==='bop')openG(a==='bin'?'in':a==='bout'?'out':a==='bop'?'opname':'master',b.dataset.id)
+  else if(a==='kst')kartu(b.dataset.id)
   else if(a==='s2close')$('#sh2').classList.remove('on');
   else if(a==='s2save'){if(GS.m==='pay')saveP();else saveG()}
   else if(a==='emv'){const x=S.mov.find(y=>y.id===b.dataset.id);if(x)openG(x.t,x.b,x.id)}

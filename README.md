@@ -56,6 +56,7 @@ Menu Analisa digabung ke Beranda: ringkasan di atas, analisa produk (pilih Bulan
 - Font memakai Google Fonts. Tanpa internet, tampilan memakai font cadangan.
 
 ## Versi
+- **1.4.0** (20 Nov 2026): menu Bahan baku mengikuti alur persediaan standar (1 Bahan, 2 Masuk, 3 Keluar, 4 Opname); ringkasan mutasi Awal + Masuk - Keluar +/- Opname = Akhir; kartu stok per bahan dengan saldo berjalan; opname stok fisik yang mencatat selisih otomatis (tidak dihitung sebagai belanja).
 - **1.3.0** (20 Nov 2026): ikon menu 3D berwarna tanpa kotak latar (rumah, toko, dompet, kotak, dokumen, roda gigi, keranjang); latar warna menu aktif dihapus, diganti garis penanda kecil di atas ikon.
 - **1.2.0** (20 Nov 2026): ikon menu 3D berwarna (menu bawah, judul halaman, aksi cepat); tombol + Titipan di header dihapus; logo dan nama usaha di layar PIN sama dengan dashboard (disalin di perangkat); ikon aplikasi (layar utama) disamakan dengan logo daun.
 - **1.1.0** (20 Nov 2026): ikon tambah pada tombol Titipan dan Bahan, ikon hapus (tempat sampah) untuk titipan, pembayaran, riwayat bahan, bahan, dan outlet; hapus outlet; nomor versi di Lainnya dan layar PIN; latar logo transparan (putih tepi dibuang saat unggah); ikon masuk dan keluar.
